@@ -35,7 +35,7 @@ export default function Modal(props: IProps) {
   const modalArea = (
     <motion.div
       id="modal--background"
-      className="absolute top-0 left-0 z-40 flex items-center justify-center h-screen overflow-hidden w-vw bg-black/50 backdrop-blur-sm"
+      className="absolute top-0 left-0 z-40 flex items-center justify-center h-screen overflow-hidden w-vw bg-white/10 backdrop-blur-sm"
       onClick={clickHandler}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

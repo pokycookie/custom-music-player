@@ -8,10 +8,11 @@ interface IModalOptions {
 }
 
 export default function useModal(
-  content: React.ReactNode,
+  // content: React.ReactNode,
   options?: IModalOptions
 ) {
   const [isOpen, setIsOpen] = useState(false)
+  const [content, setContent] = useState<React.ReactNode>(null)
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
@@ -29,5 +30,5 @@ export default function useModal(
     </AnimatePresence>
   )
 
-  return { openModal, closeModal, modal, isOpen }
+  return { openModal, closeModal, modal, isOpen, setContent }
 }

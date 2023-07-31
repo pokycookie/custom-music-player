@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import useModal from '@/hooks/useModal'
+import AddMusic from '../modal/addMusic'
 
 export default function Sidebar() {
   const [pageIdx, setPageIdx] = useState(0)
@@ -19,10 +20,15 @@ export default function Sidebar() {
 
   const pathname = usePathname()
 
-  const { modal, openModal } = useModal(modalContent, {
-    autoClose: true,
-    className: 'w-1/2 h-1/3',
+  const { modal, openModal, closeModal, setContent } = useModal({
+    autoClose: false,
+    className: 'w-2/3 h-fit max-w-lg',
   })
+
+  useEffect(() => {
+    setContent(<AddMusic close={closeModal} />)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     setPageIdx(() => {
@@ -73,8 +79,6 @@ export default function Sidebar() {
     </nav>
   )
 }
-
-const modalContent = <div className="w-full h-full bg-white rounded"></div>
 
 const navList = [
   {
