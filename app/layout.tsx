@@ -24,6 +24,7 @@ export default function RootLayout({ children }: IProps) {
           <main className="grow bg-zinc-700">{children}</main>
         </section>
         <Player />
+        <div id="modal--root"></div>
       </body>
     </html>
   )

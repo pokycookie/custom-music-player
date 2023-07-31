@@ -11,12 +11,18 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
+import useModal from '@/hooks/useModal'
 
 export default function Sidebar() {
   const [pageIdx, setPageIdx] = useState(0)
   const [hoverIdx, setHoverIdx] = useState<number | null>(null)
 
   const pathname = usePathname()
+
+  const { modal, openModal } = useModal(modalContent, {
+    autoClose: true,
+    className: 'w-1/2 h-1/3',
+  })
 
   useEffect(() => {
     setPageIdx(() => {
@@ -32,7 +38,7 @@ export default function Sidebar() {
         <h1></h1>
         <ul className="relative">
           <motion.div
-            className="absolute w-1 bg-purple-600 h-14"
+            className="absolute w-1 bg-purple-500 h-14"
             animate={{ y: 56 * (hoverIdx ?? pageIdx) }}
           ></motion.div>
           {navList.map((e, i) => {
@@ -55,14 +61,20 @@ export default function Sidebar() {
         </ul>
       </div>
       <div className="w-full p-3">
-        <button className="flex items-center justify-center w-full gap-3 p-3 font-semibold text-gray-200 rounded bg-zinc-600 hover:bg-zinc-500">
+        <button
+          className="flex items-center justify-center w-full gap-3 p-3 font-semibold text-gray-200 rounded bg-zinc-600 hover:bg-zinc-500"
+          onClick={openModal}
+        >
           <FontAwesomeIcon icon={faMusic} />
           <p>노래 추가</p>
         </button>
       </div>
+      {modal}
     </nav>
   )
 }
+
+const modalContent = <div className="w-full h-full bg-white rounded"></div>
 
 const navList = [
   {
