@@ -18,11 +18,11 @@ interface IProps {
 export default function RootLayout({ children }: IProps) {
   return (
     <html lang="en">
-      <body className={inter.className + ' ' + 'flex h-screen'}>
-        <section className="flex grow">
-          <Sidebar />
-          <main className="grow bg-zinc-700">{children}</main>
-        </section>
+      <body className={inter.className + ' flex h-screen w-vw'}>
+        <Sidebar />
+        <main className="min-w-0 overflow-auto grow shrink basis-full bg-zinc-700">
+          {children}
+        </main>
         <Player />
         <div id="modal--root"></div>
       </body>
