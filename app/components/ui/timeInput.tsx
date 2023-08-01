@@ -49,7 +49,12 @@ export default function TimeInput(props: IProps) {
       className="flex justify-between w-full p-2 pl-3 pr-3 text-sm text-gray-400 border rounded-md border-zinc-600 bg-zinc-900"
     >
       {props.unit && (
-        <span className="text-sm text-gray-400 select-none">{props.unit}</span>
+        <span
+          className="text-sm text-gray-400 select-none data-[focus=true]:text-purple-400"
+          data-focus={focus}
+        >
+          {props.unit}
+        </span>
       )}
       <div>
         <DoubleDigitInput
