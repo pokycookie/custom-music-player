@@ -6,6 +6,7 @@ import {
   faHeadphones,
   faMusic,
   faGear,
+  faRecordVinyl,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -68,11 +69,11 @@ export default function Sidebar() {
       </div>
       <div className="w-full p-3">
         <button
-          className="flex items-center justify-center w-full gap-3 p-3 font-semibold text-gray-200 rounded bg-zinc-600 hover:bg-zinc-500"
+          className="flex items-center justify-center w-full gap-3 p-3 text-gray-200 rounded bg-zinc-600 hover:bg-zinc-500"
           onClick={openModal}
         >
           <FontAwesomeIcon icon={faMusic} />
-          <p>노래 추가</p>
+          <p>Add Music</p>
         </button>
       </div>
       {modal}
@@ -82,19 +83,25 @@ export default function Sidebar() {
 
 const navList = [
   {
-    title: '홈',
+    title: 'Home',
     icon: faHouse,
     href: '/',
     regex: /^\/$/,
   },
   {
-    title: '라이브러리',
+    title: 'Playlist',
     icon: faHeadphones,
-    href: '/library',
-    regex: /^\/library$/,
+    href: '/playlist',
+    regex: /^\/playlist$/,
   },
   {
-    title: '설정',
+    title: 'Management',
+    icon: faRecordVinyl,
+    href: '/management',
+    regex: /^\/management$/,
+  },
+  {
+    title: 'Settings',
     icon: faGear,
     href: '/setting',
     regex: /^\/setting$/,
