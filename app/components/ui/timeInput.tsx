@@ -1,8 +1,9 @@
 'use client'
 
 import styled from '@emotion/styled'
-import { MouseEvent, useEffect, useRef, useState } from 'react'
+import { MouseEvent, useRef, useState } from 'react'
 import DoubleDigitInput from './doubleDigitInput'
+import { timeToNumber } from '@/utils/time'
 
 interface IProps {
   unit?: string
@@ -28,6 +29,19 @@ export default function TimeInput(props: IProps) {
     }
   }
 
+  const hourHandler = (value: number) => {
+    setHour(value)
+    if (props.onChange) props.onChange(timeToNumber(value, minute, second))
+  }
+  const minuteHandler = (value: number) => {
+    setMinute(value)
+    if (props.onChange) props.onChange(timeToNumber(hour, value, second))
+  }
+  const secondHandler = (value: number) => {
+    setSecond(value)
+    if (props.onChange) props.onChange(timeToNumber(hour, minute, value))
+  }
+
   return (
     <FocusDiv
       focus={focus}
@@ -41,7 +55,7 @@ export default function TimeInput(props: IProps) {
         <DoubleDigitInput
           ref={hourREF}
           value={hour}
-          onChange={(value) => setHour(value)}
+          onChange={hourHandler}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           next={() => minuteREF.current?.focus()}
@@ -51,7 +65,7 @@ export default function TimeInput(props: IProps) {
           ref={minuteREF}
           value={minute}
           max={59}
-          onChange={(value) => setMinute(value)}
+          onChange={minuteHandler}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           next={() => secondREF.current?.focus()}
@@ -61,7 +75,7 @@ export default function TimeInput(props: IProps) {
           ref={secondREF}
           value={second}
           max={59}
-          onChange={(value) => setSecond(value)}
+          onChange={secondHandler}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
         />

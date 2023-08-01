@@ -42,7 +42,7 @@ export default function Modal(props: IProps) {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className={'z-50 w-auto h-auto ' + props.className}
+        className={'z-50 ' + props.className}
         initial={{ y: 300 }}
         animate={{
           y: 0,

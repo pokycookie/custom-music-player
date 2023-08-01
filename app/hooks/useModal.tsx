@@ -7,10 +7,7 @@ interface IModalOptions {
   className?: string
 }
 
-export default function useModal(
-  // content: React.ReactNode,
-  options?: IModalOptions
-) {
+export default function useModal(options?: IModalOptions) {
   const [isOpen, setIsOpen] = useState(false)
   const [content, setContent] = useState<React.ReactNode>(null)
 

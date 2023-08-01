@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import LabelInput from '../ui/labelInput'
 import { validateURL } from '@/utils/validateInput'
-import { createMusic } from '@/utils/dexie'
+import { ICreateMusic, createMusic } from '@/utils/dexie'
+import TimeInput from '../ui/timeInput'
+import ToggleSection from '../ui/toggleSection'
 
 interface IProps {
   close: () => void
@@ -15,9 +17,15 @@ export default function AddMusic(props: IProps) {
   const [artist, setArtist] = useState('')
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(0)
+  const [options, setOptions] = useState(false)
 
   const addHandler = () => {
-    if (createMusic(url, title, artist)) props.close()
+    const data: ICreateMusic = { title, artist, url }
+
+    if (options && startTime) data.start = startTime
+    if (options && endTime) data.end = endTime
+
+    if (createMusic(data)) props.close()
   }
 
   return (
@@ -42,18 +50,16 @@ export default function AddMusic(props: IProps) {
           onChange={(e) => setUrl(e.target.value)}
           info={validateURL(url)}
         />
-        <div className="flex gap-3">
-          {/* <LabelInput
-            lable="Start time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-          />
-          <LabelInput
-            lable="End time"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-          /> */}
-        </div>
+        <ToggleSection
+          title="options"
+          open={options}
+          onChange={() => setOptions((prev) => !prev)}
+        >
+          <div className="flex gap-3">
+            <TimeInput unit="start" onChange={(v) => setStartTime(v)} />
+            <TimeInput unit="end" onChange={(v) => setEndTime(v)} />
+          </div>
+        </ToggleSection>
       </section>
       <section className="flex justify-end gap-2">
         <button

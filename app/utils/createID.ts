@@ -17,7 +17,9 @@ export function createMusicID(url: string, start?: number, end?: number) {
     throw new Error('invalid url')
   }
 
-  const id = `${urlType}@${videoID}`
+  let id = `${urlType}@${videoID}`
+  if (start) id += `^${start}`
+  if (end) id += `$${end}`
 
   return { id, videoID, type }
 }
