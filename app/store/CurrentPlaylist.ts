@@ -4,15 +4,11 @@ import { create } from 'zustand'
 
 interface ICurrentPlaylistMusic extends IDBMusic {
   key: string
-  // index: number
 }
 
 interface ICurrentPlaylistState {
   // Current playlist
   currentPlaylist: ICurrentPlaylistMusic[]
-
-  // Restart가 필요할 때마다 true <-> false 토글 (useEffect dependency용)
-  restartFlag: boolean
 
   // Current playlist methods
   add: (music: IDBMusic, options?: { index?: number; restart: boolean }) => void
@@ -25,11 +21,18 @@ interface ICurrentPlaylistState {
   startDrag: (music: IDBMusic) => void
   endDrag: (index: number) => void
   cancelDND: () => void
+
+  // Current playing music
+  currentPlayMusic: ICurrentPlaylistMusic | null
+  setCurrentPlayMusic: (music: ICurrentPlaylistMusic | null) => void
+
+  // Restart가 필요할 때마다 true <-> false 토글 (useEffect dependency용)
+  restartFlag: boolean
 }
 
 export const useCurrentPlaylistStore = create<ICurrentPlaylistState>((set) => ({
+  // Current playlist
   currentPlaylist: [],
-  restartFlag: false,
 
   // Current playlist methods
   add: (music, options) => {
@@ -86,4 +89,11 @@ export const useCurrentPlaylistStore = create<ICurrentPlaylistState>((set) => ({
       return { dndMusic: null, currentPlaylist: newPlaylist }
     }),
   cancelDND: () => set(() => ({ dndMusic: null })),
+
+  // Current playing music
+  currentPlayMusic: null,
+  setCurrentPlayMusic: (music) => set(() => ({ currentPlayMusic: music })),
+
+  // Restart가 필요할 때마다 true <-> false 토글 (useEffect dependency용)
+  restartFlag: false,
 }))
