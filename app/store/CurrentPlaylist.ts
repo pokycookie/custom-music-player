@@ -15,6 +15,7 @@ interface ICurrentPlaylistState {
   del: (indexs: Set<number>) => void
   replace: (musics: IDBMusic[]) => void
   shuffle: (index: number) => void
+  reorder: (playlist: ICurrentPlaylistMusic[]) => void
 
   // Drag and Drop to add new music to the current playlist
   dndMusic: ICurrentPlaylistMusic | null
@@ -45,7 +46,8 @@ export const useCurrentPlaylistStore = create<ICurrentPlaylistState>((set) => ({
         key: music.id + randomBytes(8).toString('hex'),
       }
 
-      if (options?.index) newPlaylist.splice(options.index, 0, newPlaylistMusic)
+      if (options?.index !== undefined)
+        newPlaylist.splice(options.index, 0, newPlaylistMusic)
       else newPlaylist.push(newPlaylistMusic)
 
       result.currentPlaylist = newPlaylist
@@ -74,6 +76,7 @@ export const useCurrentPlaylistStore = create<ICurrentPlaylistState>((set) => ({
       return { currentPlaylist: [state.currentPlaylist[index], ...others] }
     })
   },
+  reorder: (playlist) => set(() => ({ currentPlaylist: playlist })),
 
   // Drag and Drop to add new music to the current playlist
   dndMusic: null,

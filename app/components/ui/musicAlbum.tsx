@@ -1,4 +1,5 @@
 import { IDBMusic } from '@/db'
+import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
 import Image from 'next/image'
 
 interface IProps {
@@ -6,13 +7,22 @@ interface IProps {
 }
 
 export default function MusicAlbum(props: IProps) {
+  const cps = useCurrentPlaylistStore()
+
+  const doubleClickHandler = () => {
+    cps.add(props.data, { restart: true, index: 0 })
+  }
+
   return (
-    <div className="w-full h-full p-2 rounded select-none bg-zinc-800">
+    <div
+      className="w-full h-full p-2 rounded select-none bg-zinc-800"
+      onDoubleClick={doubleClickHandler}
+    >
       <Image
         src={`https://i.ytimg.com/vi/${props.data.videoID}/original.jpg`}
         alt="thumbnail"
-        width={300}
-        height={300}
+        width={800}
+        height={800}
         className="object-cover w-full mb-3 rounded aspect-square"
         draggable={false}
       />

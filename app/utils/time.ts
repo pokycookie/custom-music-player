@@ -14,7 +14,7 @@ export function numberToTimeString(time: number) {
 
   const H = Math.floor(time / 3600)
   const M = Math.floor((time - H * 3600) / 60)
-  const S = time - H * 3600 - M * 60
+  const S = Math.floor(time - H * 3600 - M * 60)
 
   if (H > 0) resultArr.push(H)
   resultArr.push(M)

@@ -29,5 +29,10 @@ export default function useAllCheck() {
     }
   }
 
-  return { allCheck, allCheckHandler, checks, checkHandler }
+  const clearChecks = () => {
+    setAllCheck(false)
+    setChecks(new Set())
+  }
+
+  return { allCheck, allCheckHandler, checks, checkHandler, clearChecks }
 }

@@ -1,12 +1,10 @@
+import { motion } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  fa0,
-  fa2,
   faBackwardStep,
   faForwardStep,
   faPause,
   faPlay,
-  faRepeat,
   faVolumeLow,
   faVolumeXmark,
 } from '@fortawesome/free-solid-svg-icons'
@@ -14,6 +12,11 @@ import ArcInput from '../ui/arcInput'
 import { numberToTimeString } from '@/utils/time'
 import CD from '../ui/cd'
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
+
+import RepeatIcon from '@public/icon/repeat.svg'
+import RepeatNoIcon from '@public/icon/repeatNo.svg'
+import RepeatOneIcon from '@public/icon/repeatOne.svg'
+import { useMemo } from 'react'
 
 interface IProps {
   currentTime: number
@@ -49,17 +52,9 @@ export default function MusicController(props: IProps) {
     }
   }
 
-  const repeatHandler = () => {
-    if (props.onRepeat) {
-      let repeat = props.repeat + 1
-      if (repeat > 2) repeat = 0
-      props.onRepeat(repeat)
-    }
-  }
-
   const playHandler = () => {
-    if (props.onPlay) props.onPlay()
-    if (props.onPause) props.onPause()
+    if (props.onPlay && !props.isPlaying) props.onPlay()
+    if (props.onPause && props.isPlaying) props.onPause()
   }
 
   const muteHandler = () => {
@@ -67,6 +62,49 @@ export default function MusicController(props: IProps) {
     if (props.mute) props.onMute(false)
     else props.onMute(true)
   }
+
+  const repeatIcon = useMemo(() => {
+    const repeatHandler = () => {
+      if (props.onRepeat) {
+        let repeat = props.repeat + 1
+        if (repeat > 2) repeat = 0
+        props.onRepeat(repeat)
+      }
+    }
+
+    switch (props.repeat) {
+      case 0:
+        return (
+          <RepeatNoIcon
+            width={16}
+            height={16}
+            onClick={repeatHandler}
+            className="cursor-pointer fill-zinc-400 hover:fill-zinc-300"
+          />
+        )
+      case 1:
+        return (
+          <RepeatIcon
+            width={16}
+            height={16}
+            onClick={repeatHandler}
+            className="cursor-pointer fill-zinc-400 hover:fill-zinc-300"
+          />
+        )
+      case 2:
+        return (
+          <RepeatOneIcon
+            width={16}
+            height={16}
+            onClick={repeatHandler}
+            className="cursor-pointer fill-zinc-400 hover:fill-zinc-300"
+          />
+        )
+      default:
+        return <></>
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.repeat, props.onRepeat])
 
   return (
     <div className="relative flex items-center justify-center w-[305px] aspect-square">
@@ -94,11 +132,19 @@ export default function MusicController(props: IProps) {
       </svg>
       <div className="flex items-center justify-center w-full">
         {currentPlayMusic ? (
-          <div className="flex items-center justify-center w-[200px] pointer-events-none">
+          <motion.div
+            animate={props.isPlaying ? { rotate: [0, 360] } : { rotate: 0 }}
+            transition={
+              props.isPlaying
+                ? { duration: 10, ease: 'linear', repeat: Infinity }
+                : { duration: 0.1 }
+            }
+            className="flex items-center justify-center w-[200px] pointer-events-none"
+          >
             <CD
               imgSrc={`https://i.ytimg.com/vi/${currentPlayMusic.videoID}/original.jpg`}
             />
-          </div>
+          </motion.div>
         ) : (
           <div className="flex items-center justify-center w-[200px] pointer-events-none">
             <CD imgSrc={null} />
@@ -106,11 +152,7 @@ export default function MusicController(props: IProps) {
         )}
       </div>
       <div className="absolute w-[260px] h-[38px] flex justify-between items-center">
-        <FontAwesomeIcon
-          className="w-4 h-4 cursor-pointer text-zinc-400 hover:text-zinc-300"
-          onClick={repeatHandler}
-          icon={props.repeat === 0 ? fa0 : props.repeat === 1 ? faRepeat : fa2}
-        />
+        {repeatIcon}
         <FontAwesomeIcon
           className="w-5 h-5 p-2 text-white duration-200 rounded-full opacity-0 cursor-pointer hover:opacity-100 hover:bg-black/70"
           onClick={props.onPrev}

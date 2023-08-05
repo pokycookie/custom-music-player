@@ -1,12 +1,14 @@
 'use client'
 
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactPlayer from 'react-player'
 import MusicController from '../section/musicController'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShuffle } from '@fortawesome/free-solid-svg-icons'
 import useAllCheck from '@/hooks/useAllCheck'
+import Check from '../ui/check'
+import CurrentPlaylist from '../section/currentPlaylist'
 
 export default function Player() {
   const [currentTime, setCurrentTime] = useState(0) // unit: sec
@@ -16,7 +18,8 @@ export default function Player() {
   const [repeat, setRepeat] = useState(1) // 0: no repeat, 1: repeat all music, 2: repeat current music
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const { allCheck, allCheckHandler, checkHandler, checks } = useAllCheck()
+  const { allCheck, allCheckHandler, checkHandler, checks, clearChecks } =
+    useAllCheck()
 
   const playerREF = useRef<ReactPlayer>(null)
   const cps = useCurrentPlaylistStore()
@@ -33,13 +36,27 @@ export default function Player() {
   // Public handler
 
   const changeMusic = (idx: number) => {
+    if (cps.currentPlaylist.length === 0) return
     const tmpMusic = cps.currentPlaylist[idx]
-    cps.setCurrentPlayMusic(tmpMusic)
+    cps.setCurrentPlayMusic(null)
+    setTimeout(() => {
+      cps.setCurrentPlayMusic(tmpMusic)
+    }, 100)
+    setIsPlaying(true)
+  }
+
+  const replayMusic = () => {
+    if (!playerREF.current) return
+    if (!cps.currentPlayMusic) return
+    const startTime = cps.currentPlayMusic.startTime ?? 0
+
+    playerREF.current.seekTo(startTime)
   }
 
   const stopMusic = () => {
     setCurrentTime(0)
     setMaxTime(0)
+    setIsPlaying(false)
     cps.setCurrentPlayMusic(null)
   }
 
@@ -63,13 +80,40 @@ export default function Player() {
     setIsPlaying(false)
   }
 
-  const onEnded = () => {}
+  const onEnded = () => {
+    switch (repeat) {
+      case 0:
+        // no repeat
+        if (currentPlayIdx === cps.currentPlaylist.length - 1) stopMusic()
+        else nextHandler()
+        break
+      case 1:
+        // repeat all music
+        nextHandler()
+        break
+      case 2:
+        // repeat current music
+        replayMusic()
+        break
+      default:
+        nextHandler()
+        break
+    }
+  }
 
   const onBuffer = () => {}
 
   const onBufferEnd = () => {}
 
-  const onProgress = () => {}
+  const onProgress = () => {
+    if (!playerREF.current) return
+    if (!cps.currentPlayMusic) return
+    const tmpCurrentTime =
+      playerREF.current.getCurrentTime() - (cps.currentPlayMusic.startTime ?? 0)
+    const floorTime = Math.floor(tmpCurrentTime)
+
+    if (currentTime !== floorTime) setCurrentTime(floorTime)
+  }
 
   // Music controller handler
 
@@ -122,29 +166,39 @@ export default function Player() {
   }
 
   const deleteHandler = () => {
-    if (!cps.currentPlayMusic) return
-    const key = cps.currentPlayMusic.key
-    const idx = cps.currentPlaylist.findIndex((e) => e.key === key)
+    if (!currentPlayIdx) return
 
-    if (checks.has(idx)) {
+    if (checks.has(currentPlayIdx)) {
       // 삭제하려는 목록에 현재 재생중인 곡이 포함되는 경우
-      let nextIdx = idx
+      let nextIdx = currentPlayIdx
       while (checks.has(nextIdx)) nextIdx++
     } else {
       // 삭제하려는 목록에 현재 재생중인 곡이 포함되지 않는 경우
-      const prevSize = Array.from(checks).filter((i) => i < idx).length
+      const prevSize = Array.from(checks).filter(
+        (i) => i < currentPlayIdx
+      ).length
     }
   }
 
   const shuffleHandler = () => {
-    if (!cps.currentPlayMusic) return
-    const key = cps.currentPlayMusic.key
-    const idx = cps.currentPlaylist.findIndex((e) => e.key === key)
-    cps.shuffle(idx)
+    if (!currentPlayIdx) return
+    cps.shuffle(currentPlayIdx)
   }
 
+  // Use Effect
+
+  // Restart playlist
+  useEffect(() => {
+    setCurrentTime(0)
+    setMaxTime(0)
+    changeMusic(0)
+    clearChecks()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cps.restartFlag])
+
   return (
-    <section className="flex flex-col items-center h-full w-80 bg-zinc-800 shrink-0">
+    <section className="flex flex-col items-center h-full select-none w-80 bg-zinc-800 shrink-0">
       <section className="flex items-center justify-center w-full shrink-0">
         {cps.currentPlayMusic ? (
           <div className="hidden">
@@ -163,7 +217,7 @@ export default function Player() {
                 },
               }}
               controls={false}
-              playing={cps.currentPlayMusic ? true : false}
+              playing={isPlaying}
               volume={volume / 100}
               muted={isMute}
               progressInterval={10}
@@ -194,14 +248,12 @@ export default function Player() {
           onRepeat={repeatHandler}
         />
       </section>
-      <section className="w-full pl-3 pr-3 mt-5">
-        <div className="relative grid items-center h-10 gap-2 border-b sw-full text-zinc-300 border-zinc-400 grid-cols-playlist">
-          <input
-            type="checkbox"
-            className="accent-purple-600"
+      <div className="w-full">
+        <div className="relative grid items-center h-10 gap-3 ml-3 mr-3 border-b sw-full text-zinc-400 border-zinc-400 grid-cols-playlist">
+          <Check
             checked={allCheck}
-            onChange={(e) =>
-              allCheckHandler(e.target.checked, cps.currentPlaylist.length)
+            onChange={(checked) =>
+              allCheckHandler(checked, cps.currentPlaylist.length)
             }
           />
           <p className="text-sm">Title</p>
@@ -209,17 +261,24 @@ export default function Player() {
           <FontAwesomeIcon
             icon={faShuffle}
             onClick={shuffleHandler}
-            className="absolute w-4 cursor-pointer right-1 hover:text-zinc-200"
+            className="absolute w-4 cursor-pointer right-1 hover:text-zinc-300"
           />
         </div>
-        {/* <PlaylistArea
+      </div>
+      <CurrentPlaylist
+        checks={checks}
+        checkHandler={checkHandler}
+        currentPlayIdx={currentPlayIdx}
+        changeMusic={changeMusic}
+        clearChecks={clearChecks}
+      />
+      {/* <PlaylistArea
         checkList={checkList}
         currentMusic={music}
         changeMusic={changeMusic}
         checkHandler={checkHandler}
         setMusic={setMusic}
       /> */}
-      </section>
       {/* <AnimatePresence>
         {checkList.size > 0 ? (
           <CheckController onDel={deletePlaylist} onHeart={heartHandler} count={checkList.size} />

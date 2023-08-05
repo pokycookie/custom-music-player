@@ -32,9 +32,11 @@ export default function CD(props: IProps) {
           src={props.imgSrc}
           alt="CD"
           className="w-full aspect-square object-cover [clip-path:url(#cd)]"
+          width={1200}
+          height={1200}
         />
       ) : (
-        <div className="w-full aspect-square bg-gradient-cd [clip-path:url(#cd)]"></div>
+        <div className="w-full aspect-square bg-zinc-700 [clip-path:url(#cd)]"></div>
       )}
     </>
   )
