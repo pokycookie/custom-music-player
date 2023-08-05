@@ -7,13 +7,14 @@ interface IProps {
 
 export default function MusicAlbum(props: IProps) {
   return (
-    <div className="w-full h-full p-2 rounded bg-zinc-800">
+    <div className="w-full h-full p-2 rounded select-none bg-zinc-800">
       <Image
         src={`https://i.ytimg.com/vi/${props.data.videoID}/original.jpg`}
         alt="thumbnail"
         width={300}
         height={300}
         className="object-cover w-full mb-3 rounded aspect-square"
+        draggable={false}
       />
       <p className="w-full max-w-full mb-1 overflow-hidden text-sm text-gray-400 whitespace-nowrap text-ellipsis shrink">
         {props.data.title}
