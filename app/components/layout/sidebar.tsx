@@ -59,7 +59,7 @@ export default function Sidebar() {
                   href={e.href}
                   className="flex items-center gap-4 p-4 pl-5 text-gray-200 h-14"
                 >
-                  <FontAwesomeIcon icon={e.icon} />
+                  <FontAwesomeIcon icon={e.icon} className="w-4" />
                   <p>{e.title}</p>
                 </Link>
               </li>
@@ -72,7 +72,7 @@ export default function Sidebar() {
           className="flex items-center justify-center w-full gap-3 p-3 text-gray-200 rounded bg-zinc-600 hover:bg-zinc-500"
           onClick={openModal}
         >
-          <FontAwesomeIcon icon={faMusic} />
+          <FontAwesomeIcon icon={faMusic} className="w-4" />
           <p>Add Music</p>
         </button>
       </div>

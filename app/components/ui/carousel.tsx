@@ -88,17 +88,17 @@ export default function Carousel(props: IProps) {
         {!props.infinite && idx != 0 ? (
           <button
             onClick={() => indexHandler(-1)}
-            className="absolute w-12 h-12 text-gray-400 duration-200 bg-opacity-50 border rounded-full border-zinc-600 bg-zinc-900 hover:bg-opacity-100 -left-6 hover:scale-105"
+            className="absolute flex items-center justify-center w-12 h-12 text-gray-400 duration-200 bg-opacity-50 border rounded-full border-zinc-600 bg-zinc-900 hover:bg-opacity-100 -left-6 hover:scale-105"
           >
-            <FontAwesomeIcon icon={faChevronLeft} />
+            <FontAwesomeIcon icon={faChevronLeft} className="w-3 h-3" />
           </button>
         ) : null}
         {!props.infinite && idx != container.length - 1 ? (
           <button
             onClick={() => indexHandler(1)}
-            className="absolute w-12 h-12 text-gray-400 duration-200 bg-opacity-50 border rounded-full border-zinc-600 bg-zinc-900 hover:bg-opacity-100 -right-6 hover:scale-105"
+            className="absolute flex items-center justify-center w-12 h-12 text-gray-400 duration-200 bg-opacity-50 border rounded-full border-zinc-600 bg-zinc-900 hover:bg-opacity-100 -right-6 hover:scale-105"
           >
-            <FontAwesomeIcon icon={faChevronRight} />
+            <FontAwesomeIcon icon={faChevronRight} className="w-3 h-3" />
           </button>
         ) : null}
       </div>
