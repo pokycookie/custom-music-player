@@ -23,8 +23,9 @@ export async function createMusic({
     if (title.trim() === '') throw new Error('no title')
     if (artist.trim() === '') throw new Error('no artist')
     if (start && end && start > end) throw new Error('invalid time')
+    const updated = new Date()
 
-    const data: IDBMusic = { id, videoID, type, title, artist }
+    const data: IDBMusic = { id, videoID, type, title, artist, updated }
 
     if (start) data.startTime = start
     if (end) data.endTime = end

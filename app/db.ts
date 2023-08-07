@@ -9,6 +9,7 @@ export interface IDBMusic {
   startTime?: number
   endTime?: number
   tags?: string[]
+  updated: Date
 }
 
 export interface IDBTag {
@@ -23,7 +24,7 @@ class CustomMusic extends Dexie {
   constructor() {
     super('customMusic')
     this.version(1).stores({
-      musics: 'id, type, videoID, title, artist, tags',
+      musics: 'id, type, videoID, title, artist, tags, updated',
       tags: 'tagName, musics',
     })
   }
