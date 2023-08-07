@@ -4,17 +4,18 @@ import { useEffect, useState } from 'react'
 import Carousel from './components/ui/carousel'
 import db, { IDBMusic } from './db'
 import MusicAlbum from './components/ui/musicAlbum'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 export default function Home() {
   const [musics, setMusics] = useState<IDBMusic[]>([])
 
+  const dbMusics = useLiveQuery(() => {
+    return db.musics.toArray()
+  })
+
   useEffect(() => {
-    const getMusics = async () => {
-      const musics = await db.musics.toArray()
-      setMusics(musics)
-    }
-    getMusics()
-  }, [])
+    setMusics(dbMusics ?? [])
+  }, [dbMusics])
 
   return (
     <>

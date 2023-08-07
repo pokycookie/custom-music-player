@@ -6,6 +6,8 @@ import { validateURL } from '@/utils/validateInput'
 import { ICreateMusic, createMusic } from '@/utils/dexie'
 import TimeInput from '../ui/timeInput'
 import ToggleSection from '../ui/toggleSection'
+import TagInput from '../ui/tagInput'
+import Tag from '../ui/tag'
 
 interface IProps {
   close: () => void
@@ -17,15 +19,34 @@ export default function AddMusic(props: IProps) {
   const [artist, setArtist] = useState('')
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(0)
-  const [options, setOptions] = useState(false)
+  const [tags, setTags] = useState<Set<string>>(new Set())
+  const [tagsOptions, setTagsOptions] = useState(false)
+  const [timeOptions, setTimeOptions] = useState(false)
 
-  const addHandler = () => {
+  const addHandler = async () => {
     const data: ICreateMusic = { title, artist, url }
 
-    if (options && startTime) data.start = startTime
-    if (options && endTime) data.end = endTime
+    if (timeOptions && startTime) data.start = startTime
+    if (timeOptions && endTime) data.end = endTime
+    if (tagsOptions && tags.size > 0) data.tags = Array.from(tags)
 
-    if (createMusic(data)) props.close()
+    if (await createMusic(data)) props.close()
+  }
+
+  const addTagHandler = (tag: string) => {
+    setTags((prev) => {
+      const newSet = new Set(prev)
+      newSet.add(tag)
+      return newSet
+    })
+  }
+
+  const delTagHandler = (tag: string) => {
+    setTags((prev) => {
+      const newSet = new Set(prev)
+      newSet.delete(tag)
+      return newSet
+    })
   }
 
   return (
@@ -51,9 +72,21 @@ export default function AddMusic(props: IProps) {
           info={validateURL(url)}
         />
         <ToggleSection
-          title="options"
-          open={options}
-          onChange={() => setOptions((prev) => !prev)}
+          title="tags"
+          open={tagsOptions}
+          onChange={() => setTagsOptions((prev) => !prev)}
+        >
+          <ul className="flex flex-wrap gap-2">
+            {Array.from(tags).map((tag, i) => {
+              return <Tag key={i} tagName={tag} onDelete={delTagHandler} />
+            })}
+            <TagInput onSubmit={addTagHandler} />
+          </ul>
+        </ToggleSection>
+        <ToggleSection
+          title="time options"
+          open={timeOptions}
+          onChange={() => setTimeOptions((prev) => !prev)}
         >
           <div className="flex gap-3">
             <TimeInput unit="start" onChange={(v) => setStartTime(v)} />

@@ -8,15 +8,23 @@ export interface IDBMusic {
   artist: string
   startTime?: number
   endTime?: number
+  tags?: string[]
+}
+
+export interface IDBTag {
+  tagName: string
+  musics: string[]
 }
 
 class CustomMusic extends Dexie {
   musics!: Table<IDBMusic>
+  tags!: Table<IDBTag>
 
   constructor() {
     super('customMusic')
     this.version(1).stores({
-      musics: 'id, type, videoID, title, artist',
+      musics: 'id, type, videoID, title, artist, tags',
+      tags: 'tagName, musics',
     })
   }
 }

@@ -39,9 +39,7 @@ export default function Player() {
     if (cps.currentPlaylist.length === 0) return
     const tmpMusic = cps.currentPlaylist[idx]
     cps.setCurrentPlayMusic(null)
-    setTimeout(() => {
-      cps.setCurrentPlayMusic(tmpMusic)
-    }, 100)
+    cps.setCurrentPlayMusic(tmpMusic)
     setIsPlaying(true)
   }
 

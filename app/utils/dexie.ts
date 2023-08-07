@@ -7,9 +7,17 @@ export interface ICreateMusic {
   artist: string
   start?: number
   end?: number
+  tags?: string[]
 }
 
-export function createMusic({ artist, title, url, end, start }: ICreateMusic) {
+export async function createMusic({
+  artist,
+  title,
+  url,
+  end,
+  start,
+  tags,
+}: ICreateMusic) {
   try {
     const { id, videoID, type } = createMusicID(url, start, end)
     if (title.trim() === '') throw new Error('no title')
@@ -20,6 +28,19 @@ export function createMusic({ artist, title, url, end, start }: ICreateMusic) {
 
     if (start) data.startTime = start
     if (end) data.endTime = end
+
+    if (tags && tags.length > 0) {
+      data.tags = tags
+      for (const tag of tags) {
+        const dbTag = await db.tags.get(tag)
+        if (dbTag) {
+          // const musics = [...dbTag.musics, id]
+          // db.tags.update(tag, { musics })
+        } else {
+          db.tags.add({ tagName: tag, musics: [] })
+        }
+      }
+    }
 
     db.musics.add(data)
     return true

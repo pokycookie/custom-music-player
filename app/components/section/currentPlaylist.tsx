@@ -4,7 +4,6 @@ import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
 import Check from '../ui/check'
 import styled from '@emotion/styled'
 import { useRef, useState } from 'react'
-import useAllCheck from '@/hooks/useAllCheck'
 
 const playlistHeight = 36
 

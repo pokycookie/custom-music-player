@@ -21,12 +21,16 @@
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #18181b;
+  background-color: #71717a;
 }
 *::-webkit-scrollbar-track {
-  background-color: #3f3f46;
+  background-color: #52525b;
 }
 * {
-  scrollbar-color: #18181b #bfdbfe;
+  scrollbar-color: #71717a #52525b;
   scrollbar-width: thin;
+}
+
+body {
+  overflow: hidden;
 }

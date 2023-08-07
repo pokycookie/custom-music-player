@@ -1,6 +1,6 @@
 'use client'
 
-import { FocusEvent, KeyboardEvent, forwardRef, useRef, useState } from 'react'
+import { FocusEvent, KeyboardEvent, forwardRef, useRef } from 'react'
 
 interface IProps {
   value: number
