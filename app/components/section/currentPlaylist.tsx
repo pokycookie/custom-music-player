@@ -75,7 +75,7 @@ export default function CurrentPlaylist(props: IProps) {
   }
 
   return (
-    <ul className="relative w-full overflow-y-auto grow" ref={playlistUlREF}>
+    <ul className="relative w-full overflow-y-scroll grow" ref={playlistUlREF}>
       {cps.currentPlaylist.map((music, i) => {
         return (
           <PlaylistLi

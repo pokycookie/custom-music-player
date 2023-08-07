@@ -179,7 +179,7 @@ export default function Player() {
   }
 
   const shuffleHandler = () => {
-    if (!currentPlayIdx) return
+    if (currentPlayIdx === null) return
     cps.shuffle(currentPlayIdx)
   }
 
