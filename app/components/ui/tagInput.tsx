@@ -87,10 +87,10 @@ export default function TagInput(props: IProps) {
         initial={{ height: 0, border: 'none' }}
         animate={{
           height: focus ? 'auto' : 0,
-          border: focus ? 'solid 1px #52525b' : 'solid 0px transparent',
+          border: focus ? 'solid 1px #c084fc' : 'solid 0px transparent',
         }}
         transition={{ delay: 0.1 }}
-        className="absolute w-full overflow-x-hidden overflow-y-auto rounded max-h-40 bg-zinc-900 top-11"
+        className="absolute w-full overflow-x-hidden overflow-y-auto rounded max-h-40 bg-zinc-900 top-12"
       >
         {tagOptions.map((tag, i) => {
           return (

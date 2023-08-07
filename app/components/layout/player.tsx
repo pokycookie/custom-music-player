@@ -9,6 +9,9 @@ import { faShuffle } from '@fortawesome/free-solid-svg-icons'
 import useAllCheck from '@/hooks/useAllCheck'
 import Check from '../ui/check'
 import CurrentPlaylist from '../section/currentPlaylist'
+import useDisableContextMenu from '@/hooks/useDisableContextMenu'
+import { AnimatePresence } from 'framer-motion'
+import CheckController from '../ui/checkController'
 
 export default function Player() {
   const [currentTime, setCurrentTime] = useState(0) // unit: sec
@@ -39,7 +42,9 @@ export default function Player() {
     if (cps.currentPlaylist.length === 0) return
     const tmpMusic = cps.currentPlaylist[idx]
     cps.setCurrentPlayMusic(null)
-    cps.setCurrentPlayMusic(tmpMusic)
+    setTimeout(() => {
+      cps.setCurrentPlayMusic(tmpMusic)
+    }, 100)
     setIsPlaying(true)
   }
 
@@ -164,18 +169,17 @@ export default function Player() {
   }
 
   const deleteHandler = () => {
-    if (!currentPlayIdx) return
+    if (currentPlayIdx === null) return
 
     if (checks.has(currentPlayIdx)) {
-      // 삭제하려는 목록에 현재 재생중인 곡이 포함되는 경우
       let nextIdx = currentPlayIdx
       while (checks.has(nextIdx)) nextIdx++
-    } else {
-      // 삭제하려는 목록에 현재 재생중인 곡이 포함되지 않는 경우
-      const prevSize = Array.from(checks).filter(
-        (i) => i < currentPlayIdx
-      ).length
+      if (nextIdx < cps.currentPlaylist.length) changeMusic(nextIdx)
+      else stopMusic()
     }
+
+    cps.del(checks)
+    clearChecks()
   }
 
   const shuffleHandler = () => {
@@ -194,6 +198,9 @@ export default function Player() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cps.restartFlag])
+
+  // Disable context menu
+  useDisableContextMenu()
 
   return (
     <section className="flex flex-col items-center h-full select-none w-80 bg-zinc-800 shrink-0">
@@ -270,18 +277,11 @@ export default function Player() {
         changeMusic={changeMusic}
         clearChecks={clearChecks}
       />
-      {/* <PlaylistArea
-        checkList={checkList}
-        currentMusic={music}
-        changeMusic={changeMusic}
-        checkHandler={checkHandler}
-        setMusic={setMusic}
-      /> */}
-      {/* <AnimatePresence>
-        {checkList.size > 0 ? (
-          <CheckController onDel={deletePlaylist} onHeart={heartHandler} count={checkList.size} />
+      <AnimatePresence>
+        {checks.size > 0 ? (
+          <CheckController onDelete={deleteHandler} count={checks.size} />
         ) : null}
-      </AnimatePresence> */}
+      </AnimatePresence>
     </section>
   )
 }
