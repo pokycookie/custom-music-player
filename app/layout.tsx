@@ -7,8 +7,8 @@ import Sidebar from './components/layout/sidebar'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Custom Youtube Music',
-  description: 'Custom music web application with youtube iframe api',
+  title: 'Custom Music Player',
+  description: 'Web music player for youtube, soundcloud',
 }
 
 interface IProps {
