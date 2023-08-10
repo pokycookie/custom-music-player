@@ -7,6 +7,7 @@ import {
   faMusic,
   faGear,
   faRecordVinyl,
+  faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -93,6 +94,12 @@ const navList = [
     icon: faHeadphones,
     href: '/playlist',
     regex: /^\/playlist$/,
+  },
+  {
+    title: 'Search',
+    icon: faMagnifyingGlass,
+    href: '/search',
+    regex: /^\/search$/,
   },
   {
     title: 'Management',
