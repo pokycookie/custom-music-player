@@ -17,6 +17,7 @@ export default function MusicAlbum(props: IProps) {
     <div
       className="w-full h-full p-2 rounded select-none bg-zinc-800"
       onDoubleClick={doubleClickHandler}
+      onMouseDown={() => cps.startDrag(props.data)}
     >
       <Image
         src={`https://i.ytimg.com/vi/${props.data.videoID}/original.jpg`}

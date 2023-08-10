@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Player from './components/layout/player'
 import Sidebar from './components/layout/sidebar'
+import MusicDND from './components/ui/musicDND'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: IProps) {
         </main>
         <Player />
         <div id="modal--root"></div>
+        <MusicDND />
       </body>
     </html>
   )
