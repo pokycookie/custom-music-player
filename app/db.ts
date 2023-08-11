@@ -17,6 +17,12 @@ export interface IDBTag {
   musics: string[]
 }
 
+export interface IDBPlaylist {
+  id: string
+  title: string
+  musics: string[]
+}
+
 class CustomMusic extends Dexie {
   musics!: Table<IDBMusic>
   tags!: Table<IDBTag>

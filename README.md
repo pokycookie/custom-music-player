@@ -22,8 +22,9 @@
 - [ ] Player: add checked musics to playlist
 
 - [ ] Music album
-- [ ] Music album: add to current playlist -> double click
-- [ ] Music album: add to current playlist -> drag and drop
+- [ ] Music album: design
+- [x] Music album: add to current playlist -> double click
+- [x] Music album: add to current playlist -> drag and drop
 - [ ] Music album: custom context menu
 
 - [ ] Edit music
@@ -39,4 +40,4 @@
 - [ ] Visual player
 
 - [ ] Data import
-- [ ] Data export
+- [x] Data export

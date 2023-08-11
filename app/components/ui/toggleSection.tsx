@@ -18,10 +18,14 @@ export default function ToggleSection(props: IProps) {
         <ToggleBtn on={props.open} onChange={props.onChange} />
       </div>
       <motion.div
-        initial={{ height: 0 }}
-        animate={{ height: props.open ? 'auto' : 0 }}
-        data-open={props.open}
-        className="data-[open=false]:overflow-hidden"
+        initial={{ height: 0, padding: 0 }}
+        animate={{
+          height: props.open ? 'auto' : 0,
+          padding: props.open ? '4px' : 0,
+        }}
+        className="overflow-hidden"
+        // data-open={props.open}
+        // className="data-[open=false]:overflow-hidden"
       >
         {props.children}
       </motion.div>
