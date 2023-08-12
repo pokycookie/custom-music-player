@@ -4,10 +4,9 @@
 
 - [ ] Flexible layout
 - [ ] Flexible layout: @media query -> main layout display none
-
+- [ ] Flexible layout: @media query -> sidebar layout expand <-> fold
 
 - [ ] Visual player
-- [ ] Sidebar expand <-> fold
 
 ### Feature
 
@@ -39,5 +38,10 @@
 
 - [ ] Visual player
 
-- [ ] Data import
+- [x] Data import
 - [x] Data export
+
+### Bug
+
+- [ ] Sound bug
+- [ ] Buffer bug

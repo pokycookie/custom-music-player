@@ -50,3 +50,21 @@ export async function createMusic({
     return false
   }
 }
+
+export async function importMusic(data: IDBMusic[]) {
+  try {
+    for (const music of data) {
+      // 같은 id의 music이 이미 존재하면 continue
+      if (await db.musics.get(music.id)) continue
+      for (const tag of music.tags ?? []) {
+        // 같은 이름의 tag가 이미 존재하면 continue
+        if (await db.tags.get(tag)) continue
+        db.tags.add({ tagName: tag, musics: [] })
+      }
+      music.updated = new Date()
+      db.musics.add(music)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}

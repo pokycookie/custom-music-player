@@ -1,13 +1,21 @@
 import { IDBMusic, IDBPlaylist } from '@/db'
+import { IntegrityEncoding } from './integrity'
 
-interface IFileData {
-  musics: IDBMusic[]
-  playlists: IDBPlaylist[]
+export interface IFileData {
+  data: {
+    musics: IDBMusic[]
+    playlists: IDBPlaylist[]
+  }
+  meta: {
+    integrityHash: string
+  }
 }
 
-export function exportData(data: IFileData) {
+export function exportData(data: IFileData['data']) {
+  const meta: IFileData['meta'] = { integrityHash: IntegrityEncoding(data) }
+
   const fileName = `${Number(new Date())}.cmp`
-  const file = new File([JSON.stringify(data)], fileName, {
+  const file = new File([JSON.stringify({ data, meta })], fileName, {
     type: 'text/plain',
   })
   const url = window.URL.createObjectURL(file)
@@ -18,4 +26,42 @@ export function exportData(data: IFileData) {
   link.click()
   document.body.removeChild(link)
   window.URL.revokeObjectURL(url)
+}
+
+export function importData() {
+  return new Promise<IFileData>((resolve, rejects) => {
+    const link = document.createElement('input')
+    link.type = 'file'
+    link.accept = '.cmp'
+    link.addEventListener('change', () => {
+      if (!link.files || link.files.length === 0) {
+        rejects()
+        return
+      }
+      try {
+        const file = link.files[0]
+        const reader = new FileReader()
+        reader.readAsText(file)
+        reader.onload = () => {
+          const data = JSON.parse(reader.result as string, (_, value) => {
+            if (typeof value === 'string') {
+              const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+              if (dateRegex.test(value)) return new Date(value)
+            }
+            return value
+          }) as IFileData
+          if (!data?.data || !data?.meta || !data?.meta?.integrityHash)
+            throw new Error('invalid file')
+          if (IntegrityEncoding(data.data) !== data.meta.integrityHash)
+            throw new Error('invalid file')
+          resolve(data)
+        }
+      } catch (error) {
+        rejects(error)
+      }
+    })
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  })
 }
