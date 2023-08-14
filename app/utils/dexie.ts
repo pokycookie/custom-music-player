@@ -38,7 +38,7 @@ export async function createMusic({
           // const musics = [...dbTag.musics, id]
           // db.tags.update(tag, { musics })
         } else {
-          db.tags.add({ tagName: tag, musics: [] })
+          db.tags.add({ tagName: tag })
         }
       }
     }
@@ -59,7 +59,7 @@ export async function importMusic(data: IDBMusic[]) {
       for (const tag of music.tags ?? []) {
         // 같은 이름의 tag가 이미 존재하면 continue
         if (await db.tags.get(tag)) continue
-        db.tags.add({ tagName: tag, musics: [] })
+        db.tags.add({ tagName: tag })
       }
       music.updated = new Date()
       db.musics.add(music)

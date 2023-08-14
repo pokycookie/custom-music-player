@@ -14,11 +14,10 @@ export interface IDBMusic {
 
 export interface IDBTag {
   tagName: string
-  musics: string[]
 }
 
 export interface IDBPlaylist {
-  id: string
+  id?: string
   title: string
   musics: string[]
 }
@@ -26,12 +25,14 @@ export interface IDBPlaylist {
 class CustomMusic extends Dexie {
   musics!: Table<IDBMusic>
   tags!: Table<IDBTag>
+  playlists!: Table<IDBPlaylist>
 
   constructor() {
     super('customMusic')
     this.version(1).stores({
-      musics: 'id, type, videoID, title, artist, tags, updated',
-      tags: 'tagName, musics',
+      musics: 'id, type, videoID, title, artist, *tags, updated',
+      tags: 'tagName',
+      playlists: '++id, title, *musics',
     })
   }
 }
