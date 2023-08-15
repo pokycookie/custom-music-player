@@ -90,23 +90,23 @@ const navList = [
     regex: /^\/$/,
   },
   {
-    title: 'Playlist',
-    icon: faHeadphones,
-    href: '/playlist',
-    regex: /^\/playlist$/,
-  },
-  {
     title: 'Search',
     icon: faMagnifyingGlass,
     href: '/search',
     regex: /^\/search$/,
   },
   {
-    title: 'Management',
-    icon: faRecordVinyl,
-    href: '/management',
-    regex: /^\/management$/,
+    title: 'Playlist',
+    icon: faHeadphones,
+    href: '/playlist',
+    regex: /^\/playlist.*$/,
   },
+  // {
+  //   title: 'Management',
+  //   icon: faRecordVinyl,
+  //   href: '/management',
+  //   regex: /^\/management$/,
+  // },
   {
     title: 'Settings',
     icon: faGear,

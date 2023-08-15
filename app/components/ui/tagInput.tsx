@@ -84,13 +84,13 @@ export default function TagInput(props: IProps) {
       </div>
       <motion.ul
         ref={ulREF}
-        initial={{ height: 0, border: 'none' }}
+        initial={{ height: 0, opacity: 0 }}
         animate={{
           height: focus ? 'auto' : 0,
-          border: focus ? 'solid 1px #c084fc' : 'solid 0px transparent',
+          opacity: focus ? 1 : 0,
         }}
         transition={{ delay: 0.1 }}
-        className="absolute w-full overflow-x-hidden overflow-y-auto rounded max-h-40 bg-zinc-900 top-12"
+        className="absolute w-full overflow-x-hidden overflow-y-auto border border-purple-400 rounded-sm max-h-40 bg-zinc-900 top-12"
       >
         {tagOptions.map((tag, i) => {
           return (
