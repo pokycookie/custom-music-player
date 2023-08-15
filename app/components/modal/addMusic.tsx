@@ -24,7 +24,7 @@ export default function AddMusic(props: IProps) {
   const [timeOptions, setTimeOptions] = useState(false)
 
   const addHandler = async () => {
-    const data: ICreateMusic = { title, artist, url }
+    const data: ICreateMusic = { title, artist, url, tags: [] }
 
     if (timeOptions && startTime) data.start = startTime
     if (timeOptions && endTime) data.end = endTime

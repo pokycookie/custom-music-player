@@ -7,7 +7,7 @@ export interface ICreateMusic {
   artist: string
   start?: number
   end?: number
-  tags?: string[]
+  tags: string[]
 }
 
 export async function createMusic({
@@ -25,21 +25,15 @@ export async function createMusic({
     if (start && end && start > end) throw new Error('invalid time')
     const updated = new Date()
 
-    const data: IDBMusic = { id, videoID, type, title, artist, updated }
+    const data: IDBMusic = { id, videoID, type, title, artist, updated, tags }
 
     if (start) data.startTime = start
     if (end) data.endTime = end
 
-    if (tags && tags.length > 0) {
-      data.tags = tags
+    if (tags.length > 0) {
       for (const tag of tags) {
         const dbTag = await db.tags.get(tag)
-        if (dbTag) {
-          // const musics = [...dbTag.musics, id]
-          // db.tags.update(tag, { musics })
-        } else {
-          db.tags.add({ tagName: tag })
-        }
+        if (!dbTag) db.tags.add({ tagName: tag })
       }
     }
 
@@ -66,5 +60,20 @@ export async function importMusic(data: IDBMusic[]) {
     }
   } catch (error) {
     console.error(error)
+  }
+}
+
+export async function createPlaylist() {
+  try {
+    const playlist = await db.playlists.add({
+      musics: [],
+      tags: [],
+      title: 'My playlist',
+      updated: new Date(),
+    })
+    return playlist
+  } catch (error) {
+    console.error(error)
+    return null
   }
 }

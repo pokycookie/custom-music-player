@@ -31,6 +31,8 @@
 - [ ] Edit music: edit tags
 - [ ] Edit music: delete music parmanently
 
+= [ ] Search music
+
 - [ ] Playlist
 - [ ] Playlist: create, delete playlist
 - [ ] Playlist: update playlist
