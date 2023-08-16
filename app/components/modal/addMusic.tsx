@@ -8,6 +8,7 @@ import TimeInput from '../ui/timeInput'
 import ToggleSection from '../ui/toggleSection'
 import TagInput from '../ui/tagInput'
 import Tag from '../ui/tag'
+import useTagInput from '@/hooks/useTagInput'
 
 interface IProps {
   close: () => void
@@ -19,9 +20,10 @@ export default function AddMusic(props: IProps) {
   const [artist, setArtist] = useState('')
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(0)
-  const [tags, setTags] = useState<Set<string>>(new Set())
   const [tagsOptions, setTagsOptions] = useState(false)
   const [timeOptions, setTimeOptions] = useState(false)
+
+  const { tags, addTagHandler, delTagHandler } = useTagInput()
 
   const addHandler = async () => {
     const data: ICreateMusic = { title, artist, url, tags: [] }
@@ -31,22 +33,6 @@ export default function AddMusic(props: IProps) {
     if (tagsOptions && tags.size > 0) data.tags = Array.from(tags)
 
     if (await createMusic(data)) props.close()
-  }
-
-  const addTagHandler = (tag: string) => {
-    setTags((prev) => {
-      const newSet = new Set(prev)
-      newSet.add(tag)
-      return newSet
-    })
-  }
-
-  const delTagHandler = (tag: string) => {
-    setTags((prev) => {
-      const newSet = new Set(prev)
-      newSet.delete(tag)
-      return newSet
-    })
   }
 
   return (

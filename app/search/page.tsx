@@ -1,35 +1,37 @@
 'use client'
 
 import MusicAlbum from '@/components/ui/musicAlbum'
-import ToggleTag from '@/components/ui/toggleTag'
 import db from '@/db'
 import useResize from '@/hooks/useResize'
-import useToggleTag from '@/hooks/useToggleTag'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useRef, useState } from 'react'
 import styled from '@emotion/styled'
+import TagInput from '@/components/ui/tagInput'
+import useTagInput from '@/hooks/useTagInput'
+import Tag from '@/components/ui/tag'
+import Dropdown from '@/components/ui/dropdown'
 
 export default function SearchPage() {
   const [wrapCount, setWrapCount] = useState(0)
+  const [tagOption, setTagOption] = useState<'or' | 'and'>('or')
 
   const ulREF = useRef<HTMLUListElement>(null)
 
-  const tags = useLiveQuery(() => db.tags.toArray())
-  const selectedTags = useToggleTag()
+  const { tags: selectedTags, addTagHandler, delTagHandler } = useTagInput()
 
   const result = useLiveQuery(() => {
     return db.musics
       .filter((music) => {
         const tags = new Set(music.tags)
-        for (const tag of Array.from(selectedTags.tags)) {
+        for (const tag of Array.from(selectedTags)) {
           if (tags.has(tag)) return true
         }
         return false
       })
       .toArray()
-  }, [selectedTags.tags])
+  }, [selectedTags])
 
   useResize(() => {
     if (!ulREF.current) return
@@ -41,7 +43,7 @@ export default function SearchPage() {
   return (
     <div className="p-8">
       <section className="mb-7">
-        <div className="flex items-center justify-between w-full gap-3 p-2 pl-3 mb-4 text-sm text-gray-400 border [border-radius:5px_26px_26px_5px] outline-1 focus-within:outline outline-purple-400 border-zinc-600 bg-zinc-900">
+        <div className="flex items-center justify-between w-full gap-3 p-2 pl-3 mb-2 text-sm text-gray-400 border [border-radius:5px_26px_26px_5px] outline-1 focus-within:outline outline-purple-400 border-zinc-600 bg-zinc-900">
           <input type="text" className="w-full bg-transparent outline-none" />
           <button className="flex items-center justify-center p-2 border rounded-full border-zinc-600 bg-zinc-900 hover:bg-zinc-800">
             <FontAwesomeIcon
@@ -50,16 +52,28 @@ export default function SearchPage() {
             />
           </button>
         </div>
+        <div className="w-[calc(100%-26px)] mb-3 flex gap-2">
+          <div className="w-28 shrink-0">
+            <Dropdown value={tagOption.toUpperCase()} autoClose>
+              <button
+                className="w-full h-8 p-1 pl-2 pr-2 text-sm uppercase text-zinc-400 hover:bg-zinc-700"
+                onClick={() => setTagOption('or')}
+              >
+                or
+              </button>
+              <button
+                className="w-full h-8 p-1 pl-2 pr-2 text-sm uppercase text-zinc-400 hover:bg-zinc-700"
+                onClick={() => setTagOption('and')}
+              >
+                and
+              </button>
+            </Dropdown>
+          </div>
+          <TagInput onSubmit={addTagHandler} />
+        </div>
         <ul className="flex flex-wrap gap-1">
-          {tags?.map((e) => {
-            return (
-              <ToggleTag
-                key={e.tagName}
-                tagName={e.tagName}
-                selected={selectedTags.tags.has(e.tagName)}
-                onChange={selectedTags.toggle}
-              />
-            )
+          {Array.from(selectedTags)?.map((tag, i) => {
+            return <Tag key={i} tagName={tag} onDelete={delTagHandler} />
           }) ?? null}
         </ul>
       </section>
