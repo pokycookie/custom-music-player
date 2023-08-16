@@ -3,12 +3,19 @@
 import MusicAlbum from '@/components/ui/musicAlbum'
 import ToggleTag from '@/components/ui/toggleTag'
 import db from '@/db'
+import useResize from '@/hooks/useResize'
 import useToggleTag from '@/hooks/useToggleTag'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useRef, useState } from 'react'
+import styled from '@emotion/styled'
 
 export default function SearchPage() {
+  const [wrapCount, setWrapCount] = useState(0)
+
+  const ulREF = useRef<HTMLUListElement>(null)
+
   const tags = useLiveQuery(() => db.tags.toArray())
   const selectedTags = useToggleTag()
 
@@ -23,6 +30,13 @@ export default function SearchPage() {
       })
       .toArray()
   }, [selectedTags.tags])
+
+  useResize(() => {
+    if (!ulREF.current) return
+    const rect = ulREF.current.getBoundingClientRect()
+    const minWidth = 176 // w-44 11rem 176px
+    setWrapCount(Math.floor(rect.width / minWidth))
+  })
 
   return (
     <div className="p-8">
@@ -50,12 +64,12 @@ export default function SearchPage() {
         </ul>
       </section>
       <section>
-        <ul className="flex flex-wrap gap-3">
+        <ul className="flex flex-wrap" ref={ulREF}>
           {result?.map((music, i) => {
             return (
-              <li key={i} className="w-44">
+              <WrapLi key={i} className="p-1 w-44 grow" wrapCount={wrapCount}>
                 <MusicAlbum data={music} />
-              </li>
+              </WrapLi>
             )
           }) ?? null}
         </ul>
@@ -63,3 +77,7 @@ export default function SearchPage() {
     </div>
   )
 }
+
+const WrapLi = styled.li<{ wrapCount: number }>((props) => ({
+  maxWidth: `${100 / props.wrapCount}%`,
+}))
