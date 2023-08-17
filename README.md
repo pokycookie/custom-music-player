@@ -31,7 +31,10 @@
 - [ ] Edit music: edit tags
 - [ ] Edit music: delete music parmanently
 
-= [ ] Search music
+- [ ] Search music
+- [x] Search music: tag search -> `or`
+- [ ] Search music: tag search -> `and`
+- [ ] Search music: text search
 
 - [ ] Playlist
 - [ ] Playlist: create, delete playlist

@@ -17,6 +17,7 @@ module.exports = {
       },
       gridTemplateColumns: {
         playlist: '15px 1fr 85px',
+        musicList: '20px 50px 2fr 1fr 30px 30px 30px',
       },
     },
   },

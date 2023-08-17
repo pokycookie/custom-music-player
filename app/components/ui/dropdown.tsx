@@ -60,7 +60,11 @@ export default function Dropdown(props: IProps) {
         </div>
         <div className="h-5 border-l border-zinc-600"></div>
         <div className="flex items-center justify-center w-10">
-          <Icon open={isOpen} icon={faAngleDown} className="duration-300" />
+          <Icon
+            open={isOpen}
+            icon={faAngleDown}
+            className="w-4 h-4 duration-300"
+          />
         </div>
       </button>
       {isOpen ? (
