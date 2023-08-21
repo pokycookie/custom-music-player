@@ -63,17 +63,43 @@ export async function importMusic(data: IDBMusic[]) {
   }
 }
 
-export async function createPlaylist() {
+interface ICreatePlaylist {
+  title?: string
+  musics?: string[]
+  tags?: string[]
+}
+
+export async function createPlaylist(options?: ICreatePlaylist) {
   try {
     const playlist = await db.playlists.add({
-      musics: [],
-      tags: [],
-      title: 'My playlist',
+      musics: options?.musics ?? [],
+      tags: options?.tags ?? [],
+      title: options?.title ?? 'My playlist',
       updated: new Date(),
     })
     return playlist
   } catch (error) {
     console.error(error)
     return null
+  }
+}
+
+export async function addPlaylistMusic(playlist: number, music: string) {
+  try {
+    const musics = (await db.playlists.get(playlist))?.musics ?? []
+    musics.push(music)
+    db.playlists.update(playlist, { musics })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function delPlaylistMusic(playlist: number, index: number) {
+  try {
+    const musics = (await db.playlists.get(playlist))?.musics ?? []
+    musics.splice(index, 1)
+    db.playlists.update(playlist, { musics })
+  } catch (error) {
+    console.error(error)
   }
 }

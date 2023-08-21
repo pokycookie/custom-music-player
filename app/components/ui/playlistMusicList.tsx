@@ -2,29 +2,30 @@ import { IDBMusic } from '@/db'
 import {
   faEllipsisVertical,
   faPlay,
-  faPlus,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Image from 'next/image'
 import Check from './check'
-import { addPlaylistMusic } from '@/utils/dexie'
+import { delPlaylistMusic } from '@/utils/dexie'
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
 
 interface IProps {
   data: IDBMusic
-  defaultPlaylist?: number
+  index: number
+  playlist?: number
 }
 
-export default function MusicList(props: IProps) {
+export default function PlaylistMusicList(props: IProps) {
   const cps = useCurrentPlaylistStore()
 
   const playHandler = () => {
     cps.add(props.data, { index: 0, restart: true })
   }
 
-  const playlistHandler = async () => {
-    if (props.defaultPlaylist) {
-      addPlaylistMusic(props.defaultPlaylist, props.data.id)
+  const deleteHandler = async () => {
+    if (props.playlist) {
+      delPlaylistMusic(props.playlist, props.index)
     }
   }
 
@@ -53,9 +54,9 @@ export default function MusicList(props: IProps) {
       </button>
       <button
         className="flex items-center justify-center w-full h-full justify-self-center text-zinc-400 hover:text-zinc-300"
-        onClick={playlistHandler}
+        onClick={deleteHandler}
       >
-        <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
       </button>
       <button className="flex items-center justify-center w-full h-full justify-self-center text-zinc-400 hover:text-zinc-300">
         <FontAwesomeIcon icon={faEllipsisVertical} className="w-5 h-5" />

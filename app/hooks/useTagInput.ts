@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-export default function useTagInput() {
-  const [tags, setTags] = useState<Set<string>>(new Set())
+export default function useTagInput(defaultTag?: string[]) {
+  const [tags, setTags] = useState<Set<string>>(new Set(defaultTag ?? []))
 
   const addTagHandler = (tag: string) => {
     setTags((prev) => {

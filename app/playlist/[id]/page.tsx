@@ -2,9 +2,11 @@
 
 import Check from '@/components/ui/check'
 import MusicList from '@/components/ui/musicList'
+import PlaylistCover from '@/components/ui/playlistCover'
+import PlaylistMusicList from '@/components/ui/playlistMusicList'
 import Tag from '@/components/ui/tag'
 import TagInput from '@/components/ui/tagInput'
-import db from '@/db'
+import db, { IDBMusic } from '@/db'
 import useTagInput from '@/hooks/useTagInput'
 import {
   faFaceSadTear,
@@ -18,6 +20,7 @@ import { KeyboardEvent, useEffect, useState } from 'react'
 export default function PlaylistDetailPage() {
   const [editTitle, setEditTitle] = useState(false)
   const [title, setTitle] = useState('')
+  const [musics, setMusics] = useState<IDBMusic[]>([])
 
   const params = useParams()
   const { tags: selectedTags, addTagHandler, delTagHandler } = useTagInput()
@@ -36,6 +39,17 @@ export default function PlaylistDetailPage() {
   const titleCancelHandler = () => {
     setTitle(playlist?.title ?? '')
     setEditTitle(false)
+  }
+
+  const tagDeleteHandler = async (tagName: string) => {
+    try {
+      const id = parseInt(params['id'] as string)
+      const tags = new Set((await db.playlists.get(id))?.tags)
+      tags.delete(tagName)
+      db.playlists.update(id, { tags: Array.from(tags) })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const playlist = useLiveQuery(() => {
@@ -63,34 +77,73 @@ export default function PlaylistDetailPage() {
     if (playlist?.title) setTitle(playlist?.title)
   }, [playlist?.title])
 
+  useEffect(() => {
+    const getMusics = async () => {
+      if (!playlist?.musics) return
+      const tmpMusics: IDBMusic[] = []
+      for (const id of playlist.musics) {
+        try {
+          const music = await db.musics.get(id)
+          if (music) tmpMusics.push(music)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+      setMusics(tmpMusics)
+    }
+    getMusics()
+  }, [playlist?.musics])
+
   return (
-    <div className="p-8">
-      <section className="mb-3">
-        {editTitle ? (
-          <input
-            type="text"
-            value={title}
-            className="pb-1 text-3xl font-semibold bg-transparent border-b outline-none border-zinc-300 text-zinc-400 w-72"
-            onChange={(e) => setTitle(e.target.value)}
-            onKeyDown={titleSubmitHandler}
-            onBlur={titleCancelHandler}
-            autoFocus
-          />
-        ) : (
-          <h3
-            className="text-3xl font-semibold cursor-pointer hover:underline text-zinc-300 w-fit"
-            onClick={() => setEditTitle(true)}
-          >
-            {playlist?.title}
-          </h3>
-        )}
+    <div className="w-full p-8">
+      <section className="w-full mb-5">
+        <div className="flex w-full gap-5">
+          {/* <div className="overflow-hidden rounded w-44 h-44 bg-zinc-800 shrink-0"></div> */}
+          <PlaylistCover musics={musics} />
+          <div className="overflow-hidden grow">
+            {editTitle ? (
+              <input
+                type="text"
+                value={title}
+                className="w-full pb-1 text-3xl font-semibold bg-transparent border-b outline-none border-zinc-300 text-zinc-400"
+                onChange={(e) => setTitle(e.target.value)}
+                onKeyDown={titleSubmitHandler}
+                onBlur={titleCancelHandler}
+                autoFocus
+              />
+            ) : (
+              <h3
+                className="w-full pb-1 overflow-hidden text-3xl font-semibold border-b border-transparent cursor-pointer hover:underline text-zinc-300 text-ellipsis whitespace-nowrap"
+                onClick={() => setEditTitle(true)}
+              >
+                {playlist?.title}
+              </h3>
+            )}
+          </div>
+        </div>
+        <ul className="flex flex-wrap gap-2 mt-4">
+          {playlist?.tags.map((tag, i) => {
+            return <Tag key={i} tagName={tag} onDelete={tagDeleteHandler} />
+          })}
+        </ul>
       </section>
       <section className="mb-5">
         <h4 className="mb-3 ml-1 text-lg font-semibold text-zinc-400">
           Playlist
         </h4>
-        <ul className="flex flex-col gap-1 border rounded-md border-zinc-600 bg-zinc-800">
-          {playlist && playlist.musics.length > 0 ? null : (
+        <ul className="flex flex-col gap-1 p-3 border rounded-md border-zinc-600 bg-zinc-800">
+          {musics.length > 0 ? (
+            musics.map((music, i) => {
+              return (
+                <PlaylistMusicList
+                  key={i}
+                  data={music}
+                  index={i}
+                  playlist={playlist?.id!}
+                />
+              )
+            })
+          ) : (
             <li className="flex flex-col items-center justify-center w-full gap-4 text-zinc-400 h-52">
               <FontAwesomeIcon icon={faFolderOpen} className="w-20 h-20" />
               <p>The playlist is empty</p>
