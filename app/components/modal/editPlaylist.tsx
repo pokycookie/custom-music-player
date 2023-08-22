@@ -1,36 +1,43 @@
 'use client'
 
-import useTagInput from '@/hooks/useTagInput'
-import { createPlaylist } from '@/utils/dexie'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import TagInput from '../ui/tagInput'
-import Tag from '../ui/tag'
+import { useEffect, useState } from 'react'
 import LabelInput from '../ui/labelInput'
+import TagInput from '../ui/tagInput'
+import useTagInput from '@/hooks/useTagInput'
+import Tag from '../ui/tag'
+import db from '@/db'
 
 interface IProps {
   close: () => void
+  id: number
+  title: string
+  tags?: string[]
 }
 
-export default function AddPlaylist(props: IProps) {
-  const router = useRouter()
-
-  const [title, setTitle] = useState('')
+export default function EditPlaylist(props: IProps) {
+  const [title, setTitle] = useState(props.title)
 
   const { tags, addTagHandler, delTagHandler } = useTagInput()
 
-  const addHandler = async () => {
-    const key = await createPlaylist({
-      title: title.trim() !== '' ? title : undefined,
-      tags: tags.size !== 0 ? Array.from(tags) : undefined,
-    })
-    if (key) router.push(`/playlist/${key}`)
+  useEffect(() => {
+    if (!props.tags) return
+    for (const tag of props.tags) addTagHandler(tag)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.tags])
+
+  const editHandler = async () => {
+    try {
+      await db.playlists.update(props.id, { title, tags: Array.from(tags) })
+      props.close()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
     <article className="flex flex-col justify-between w-full h-full p-4 rounded-md bg-zinc-800">
       <h2 className="mb-3 ml-2 text-lg font-semibold text-gray-400">
-        Add New Playlist
+        Edit Playlist
       </h2>
       <section className="mb-6">
         <div className="mb-2">
@@ -56,9 +63,9 @@ export default function AddPlaylist(props: IProps) {
         </button>
         <button
           className="p-2 pl-3 pr-3 text-sm text-gray-400 uppercase border border-transparent rounded bg-zinc-900 hover:bg-zinc-700 hover:border-purple-600 outline-purple-600"
-          onClick={addHandler}
+          onClick={editHandler}
         >
-          add
+          update
         </button>
       </section>
     </article>

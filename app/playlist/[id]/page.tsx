@@ -1,5 +1,6 @@
 'use client'
 
+import EditPlaylist from '@/components/modal/editPlaylist'
 import Carousel from '@/components/ui/carousel'
 import Check from '@/components/ui/check'
 import MusicAlbum from '@/components/ui/musicAlbum'
@@ -9,6 +10,7 @@ import PlaylistMusicList from '@/components/ui/playlistMusicList'
 import Tag from '@/components/ui/tag'
 import TagInput from '@/components/ui/tagInput'
 import db, { IDBMusic } from '@/db'
+import useModal from '@/hooks/useModal'
 import useTagInput from '@/hooks/useTagInput'
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
 import {
@@ -17,6 +19,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faArrowLeft,
+  faPen,
   faPlay,
   faShuffle,
 } from '@fortawesome/free-solid-svg-icons'
@@ -35,6 +38,11 @@ export default function PlaylistDetailPage() {
   const params = useParams()
   const { tags: selectedTags, addTagHandler, delTagHandler } = useTagInput()
 
+  const { modal, openModal, closeModal, setContent } = useModal({
+    autoClose: false,
+    className: 'w-2/3 h-fit max-w-lg',
+  })
+
   const titleSubmitHandler = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (!playlist) return
     if (e.key !== 'Enter') return
@@ -50,17 +58,6 @@ export default function PlaylistDetailPage() {
   const titleCancelHandler = () => {
     setTitle(playlist?.title ?? '')
     setEditTitle(false)
-  }
-
-  const tagDeleteHandler = async (tagName: string) => {
-    try {
-      const id = parseInt(params['id'] as string)
-      const tags = new Set((await db.playlists.get(id))?.tags)
-      tags.delete(tagName)
-      db.playlists.update(id, { tags: Array.from(tags) })
-    } catch (error) {
-      console.error(error)
-    }
   }
 
   const playHandler = () => {
@@ -95,17 +92,34 @@ export default function PlaylistDetailPage() {
   }, [selectedTags])
 
   const recommend = useLiveQuery(() => {
-    return db.musics
-      .filter((music) => {
-        const playlistTags = new Set(playlist?.tags)
-        return music.tags.some((tag) => playlistTags.has(tag))
-      })
-      .toArray()
+    if ((playlist?.tags.length ?? 0) === 0) {
+      return db.musics.toArray()
+    } else {
+      return db.musics
+        .filter((music) => {
+          const playlistTags = new Set(playlist?.tags)
+          return music.tags.some((tag) => playlistTags.has(tag))
+        })
+        .toArray()
+    }
   }, [playlist?.tags])
 
   useEffect(() => {
     if (playlist?.title) setTitle(playlist?.title)
   }, [playlist?.title])
+
+  useEffect(() => {
+    const id = parseInt(params['id'] as string)
+    setContent(
+      <EditPlaylist
+        close={closeModal}
+        title={title}
+        tags={playlist?.tags}
+        id={id}
+      />
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, playlist?.tags, params['id']])
 
   useEffect(() => {
     const getMusics = async () => {
@@ -175,9 +189,15 @@ export default function PlaylistDetailPage() {
                     {(playlist?.tags.length ?? 0) === 1 ? 'tag' : 'tags'}
                   </p>
                 </span>
+                <button
+                  className="flex items-center justify-center text-zinc-400 hover:text-zinc-300"
+                  onClick={openModal}
+                >
+                  <FontAwesomeIcon icon={faPen} className="w-3 h-3" />
+                </button>
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <button
                 onClick={playHandler}
                 className="flex items-center justify-center gap-3 p-1 pl-3 pr-3 rounded-md text-zinc-400 bg-zinc-800 hover:bg-zinc-600 hover:text-zinc-300"
@@ -195,9 +215,17 @@ export default function PlaylistDetailPage() {
             </div>
           </div>
         </div>
-        <ul className="flex flex-wrap gap-2 mt-4">
+        <ul className="flex flex-wrap gap-1 mt-4">
           {playlist?.tags.map((tag, i) => {
-            return <Tag key={i} tagName={tag} onDelete={tagDeleteHandler} />
+            return (
+              <li
+                key={i}
+                className="flex items-center gap-1 p-1 pl-3 pr-3 text-sm border rounded-full select-none border-zinc-600 text-zinc-500 bg-zinc-900"
+              >
+                <p>#</p>
+                <p>{tag}</p>
+              </li>
+            )
           })}
         </ul>
       </section>
@@ -277,6 +305,7 @@ export default function PlaylistDetailPage() {
           )}
         </ul>
       </section>
+      {modal}
     </div>
   )
 }
