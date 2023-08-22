@@ -37,14 +37,17 @@
 - [ ] Search music: text search
 
 - [ ] Playlist
-- [ ] Playlist: create, delete playlist
-- [ ] Playlist: update playlist
-- [ ] Playlist: replace current playlist
+- [x] Playlist: create playlist
+- [ ] Playlist: delete playlist
+- [x] Playlist: update playlist
+- [x] Playlist: replace current playlist
 
 - [ ] Visual player
 
-- [x] Data import
-- [x] Data export
+- [x] Data import: musics
+- [ ] Data import: playlist
+- [x] Data export: musics
+- [ ] Data export: playlist
 
 ### Bug
 

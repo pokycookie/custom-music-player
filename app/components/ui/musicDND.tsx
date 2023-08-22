@@ -2,6 +2,7 @@
 
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import styled from '@emotion/styled'
 
 interface IPos {
@@ -33,8 +34,9 @@ export default function MusicDND() {
   return (
     <>
       {pos && dndMusic ? (
-        <Tooltip
-          pos={pos}
+        <motion.div
+          animate={{ left: pos.x, top: pos.y }}
+          transition={{ duration: 0 }}
           className="fixed flex items-center gap-2 pl-3 pr-3 -translate-x-1/2 -translate-y-1/2 rounded pointer-events-none select-none w-72 h-9 text-zinc-300 bg-zinc-600 opacity-60"
         >
           <p className="overflow-hidden text-xs grow whitespace-nowrap overflow-ellipsis">
@@ -43,7 +45,7 @@ export default function MusicDND() {
           <p className="w-20 overflow-hidden text-xs whitespace-nowrap overflow-ellipsis">
             {dndMusic.artist}
           </p>
-        </Tooltip>
+        </motion.div>
       ) : null}
     </>
   )

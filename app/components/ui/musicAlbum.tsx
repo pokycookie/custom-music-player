@@ -7,17 +7,18 @@ interface IProps {
 }
 
 export default function MusicAlbum(props: IProps) {
-  const cps = useCurrentPlaylistStore()
+  const playlistAdd = useCurrentPlaylistStore((state) => state.add)
+  const startDrag = useCurrentPlaylistStore((state) => state.startDrag)
 
   const doubleClickHandler = () => {
-    cps.add(props.data, { restart: true, index: 0 })
+    playlistAdd(props.data, { restart: true, index: 0 })
   }
 
   return (
     <div
       className="w-full h-full p-2 rounded select-none bg-zinc-800"
       onDoubleClick={doubleClickHandler}
-      onMouseDown={() => cps.startDrag(props.data)}
+      onMouseDown={() => startDrag(props.data)}
     >
       <Image
         src={`https://i.ytimg.com/vi/${props.data.videoID}/original.jpg`}

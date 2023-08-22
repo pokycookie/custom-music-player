@@ -182,6 +182,8 @@ export default function Player() {
     clearChecks()
   }
 
+  const playlistHandler = () => {}
+
   const shuffleHandler = () => {
     if (currentPlayIdx === null) return
     cps.shuffle(currentPlayIdx)
@@ -279,7 +281,11 @@ export default function Player() {
       />
       <AnimatePresence>
         {checks.size > 0 ? (
-          <CheckController onDelete={deleteHandler} count={checks.size} />
+          <CheckController
+            onDelete={deleteHandler}
+            onPlaylist={playlistHandler}
+            count={checks.size}
+          />
         ) : null}
       </AnimatePresence>
     </section>

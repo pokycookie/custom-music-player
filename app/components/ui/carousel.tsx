@@ -11,7 +11,6 @@ import styled from '@emotion/styled'
 
 interface IProps {
   children?: React.ReactNode
-  aspectRatio: number
   showCount: number
   infinite?: boolean
 }
@@ -59,7 +58,7 @@ export default function Carousel(props: IProps) {
   }, [props.children, props.showCount])
 
   return (
-    <div className="w-full p-3 pl-9 pr-9">
+    <div className="w-full">
       <div className="relative flex items-center grow">
         <div className="flex w-full overflow-hidden">
           {container.map((viewport, i) => {
