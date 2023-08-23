@@ -13,6 +13,7 @@ interface IProps {
   children?: React.ReactNode
   showCount: number
   infinite?: boolean
+  gap?: number
 }
 
 export default function Carousel(props: IProps) {
@@ -74,7 +75,8 @@ export default function Carousel(props: IProps) {
                     <NodeWrapper
                       key={i}
                       showCount={props.showCount}
-                      className="p-2 shrink-0 grow-0"
+                      className="shrink-0 grow-0"
+                      style={{ padding: props.gap ?? 8 }}
                     >
                       {node}
                     </NodeWrapper>

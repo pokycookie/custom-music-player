@@ -38,9 +38,10 @@
 
 - [ ] Playlist
 - [x] Playlist: create playlist
-- [ ] Playlist: delete playlist
 - [x] Playlist: update playlist
 - [x] Playlist: replace current playlist
+- [ ] Playlist: context menu
+- [ ] Playlist: delete playlist
 
 - [ ] Visual player
 

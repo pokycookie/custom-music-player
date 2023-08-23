@@ -13,6 +13,7 @@ import db, { IDBMusic } from '@/db'
 import useModal from '@/hooks/useModal'
 import useTagInput from '@/hooks/useTagInput'
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
+import { addPlaylistMusic } from '@/utils/dexie'
 import {
   faFaceSadTear,
   faFolderOpen,
@@ -21,10 +22,12 @@ import {
   faArrowLeft,
   faPen,
   faPlay,
+  faPlus,
   faShuffle,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useLiveQuery } from 'dexie-react-hooks'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { KeyboardEvent, useEffect, useState } from 'react'
@@ -70,6 +73,11 @@ export default function PlaylistDetailPage() {
     replace(shuffle)
   }
 
+  const playlistAddHandler = async (id: string) => {
+    if (!playlist) return
+    addPlaylistMusic(playlist.id!, id)
+  }
+
   const playlist = useLiveQuery(() => {
     try {
       const id = parseInt(params['id'] as string)
@@ -100,9 +108,13 @@ export default function PlaylistDetailPage() {
           const playlistTags = new Set(playlist?.tags)
           return music.tags.some((tag) => playlistTags.has(tag))
         })
+        .filter((music) => {
+          const playlistMusics = new Set(playlist?.musics)
+          return !playlistMusics.has(music.id)
+        })
         .toArray()
     }
-  }, [playlist?.tags])
+  }, [playlist?.tags, playlist?.musics])
 
   useEffect(() => {
     if (playlist?.title) setTitle(playlist?.title)
@@ -262,9 +274,38 @@ export default function PlaylistDetailPage() {
         <h4 className="mb-3 ml-1 text-xl font-semibold text-zinc-400">
           Recommend
         </h4>
-        <Carousel showCount={4}>
+        <Carousel showCount={4} gap={4}>
           {recommend?.map((music, i) => {
-            return <MusicAlbum data={music} key={i} />
+            return (
+              <div
+                key={i}
+                onClick={() => playlistAddHandler(music.id)}
+                className="relative w-full h-full p-2 overflow-hidden rounded cursor-pointer select-none group bg-zinc-800"
+              >
+                <Image
+                  src={`https://i.ytimg.com/vi/${music.videoID}/original.jpg`}
+                  alt="thumbnail"
+                  width={800}
+                  height={800}
+                  className="object-cover w-full rounded aspect-square"
+                  draggable={false}
+                />
+                <span className="absolute bottom-0 left-0 w-full p-3 bg-zinc-900/90">
+                  <p className="w-full max-w-full mb-1 overflow-hidden text-sm text-gray-300 whitespace-nowrap text-ellipsis shrink">
+                    {music.title}
+                  </p>
+                  <p className="w-full max-w-full overflow-hidden text-xs text-gray-400 whitespace-nowrap text-ellipsis shrink">
+                    {music.artist}
+                  </p>
+                </span>
+                <div className="absolute top-0 left-0 flex items-center justify-center invisible w-full h-full bg-zinc-700/80 group-hover:visible">
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    className="w-8 h-8 text-zinc-300"
+                  />
+                </div>
+              </div>
+            )
           })}
         </Carousel>
       </section>
