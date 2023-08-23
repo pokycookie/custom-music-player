@@ -50,7 +50,7 @@ export default function ExportModal(props: IProps) {
               }
             />
             <span className="flex items-center gap-2 select-none">
-              <p className="font-semibold text-purple-600">
+              <p className="font-semibold text-purple-400">
                 {musicChecks.checks.size}
               </p>
               <p className="text-sm text-zinc-500">selected</p>
