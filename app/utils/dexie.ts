@@ -1,5 +1,6 @@
 import db, { IDBMusic } from '@/db'
 import { createMusicID } from './createID'
+import { IFilePlaylist } from './fileSystem'
 
 export interface ICreateMusic {
   url: string
@@ -63,6 +64,25 @@ export async function importMusic(data: IDBMusic[]) {
   }
 }
 
+export async function importPlaylist(data: IFilePlaylist[]) {
+  try {
+    for (const playlist of data) {
+      await importMusic(playlist.musics)
+      for (const tag of playlist.tags) {
+        if (await db.tags.get(tag)) continue
+        // 새로운 태그 추가
+        db.tags.add({ tagName: tag })
+      }
+      db.playlists.add({
+        ...playlist,
+        musics: playlist.musics.map((e) => e.id),
+      })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 interface ICreatePlaylist {
   title?: string
   musics?: string[]
@@ -77,6 +97,13 @@ export async function createPlaylist(options?: ICreatePlaylist) {
       title: options?.title ?? 'My playlist',
       updated: new Date(),
     })
+
+    for (const tag of options?.tags ?? []) {
+      if (await db.tags.get(tag)) continue
+      // 새로운 태그 추가
+      db.tags.add({ tagName: tag })
+    }
+
     return playlist
   } catch (error) {
     console.error(error)

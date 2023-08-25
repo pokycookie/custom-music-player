@@ -14,9 +14,10 @@ interface IProps {
 
 export default function ExportModal(props: IProps) {
   const [musicOption, setMusicOption] = useState(false)
-  const [playlistOptions, setPlaylistOption] = useState(false)
+  const [playlistOption, setPlaylistOption] = useState(false)
 
   const musicChecks = useAllCheck()
+  const playlistChecks = useAllCheck()
 
   const exportHandler = () => {
     const checkedMusics: IDBMusic[] = []
@@ -27,15 +28,21 @@ export default function ExportModal(props: IProps) {
     }
 
     const checkedPlaylists: IDBPlaylist[] = []
+    if (playlists && playlistOption) {
+      Array.from(playlistChecks.checks).forEach((i) =>
+        checkedPlaylists.push(playlists[i])
+      )
+    }
 
     exportData({ musics: checkedMusics, playlists: checkedPlaylists })
     props.close()
   }
 
   const musics = useLiveQuery(() => db.musics.toArray())
+  const playlists = useLiveQuery(() => db.playlists.toArray())
 
   return (
-    <article className="flex flex-col justify-between w-full h-full p-4 rounded-md bg-zinc-800">
+    <article className="flex flex-col justify-between w-full h-full max-h-screen p-4 overflow-y-auto rounded-md bg-zinc-800">
       <ToggleSection
         open={musicOption}
         title="export music"
@@ -56,7 +63,7 @@ export default function ExportModal(props: IProps) {
               <p className="text-sm text-zinc-500">selected</p>
             </span>
           </div>
-          <ul className="pl-2 pr-4 overflow-y-auto max-h-56">
+          <ul className="pl-2 pr-4 mb-8 overflow-y-auto select-none max-h-56">
             {musics?.map((music, i) => {
               return (
                 <li
@@ -78,10 +85,47 @@ export default function ExportModal(props: IProps) {
         </div>
       </ToggleSection>
       <ToggleSection
-        open={playlistOptions}
+        open={playlistOption}
         title="export playlist"
         onChange={() => setPlaylistOption((prev) => !prev)}
-      ></ToggleSection>
+      >
+        <div className="h-full overflow-hidden">
+          <div className="flex items-center justify-between gap-3 p-2 pb-3 mb-2 border-b border-zinc-600">
+            <Check
+              checked={playlistChecks.allCheck}
+              onChange={(checked) =>
+                playlistChecks.allCheckHandler(checked, playlists?.length ?? 0)
+              }
+            />
+            <span className="flex items-center gap-2 select-none">
+              <p className="font-semibold text-purple-400">
+                {playlistChecks.checks.size}
+              </p>
+              <p className="text-sm text-zinc-500">selected</p>
+            </span>
+          </div>
+          <ul className="pl-2 pr-4 overflow-y-auto select-none max-h-56">
+            {playlists?.map((playlist, i) => {
+              return (
+                <li
+                  key={i}
+                  className="flex items-center gap-3 pt-1 pb-1 text-sm text-zinc-500"
+                >
+                  <Check
+                    checked={playlistChecks.checks.has(i)}
+                    onChange={(checked) =>
+                      playlistChecks.checkHandler(i, checked)
+                    }
+                  />
+                  <span className="flex items-center justify-between w-full">
+                    <p className="text-zinc-400">{playlist.title}</p>
+                  </span>
+                </li>
+              )
+            }) ?? null}
+          </ul>
+        </div>
+      </ToggleSection>
       <section className="flex justify-end gap-2 mt-6">
         <button
           className="p-2 pl-3 pr-3 text-sm text-gray-400 uppercase rounded bg-zinc-900 hover:bg-zinc-700"

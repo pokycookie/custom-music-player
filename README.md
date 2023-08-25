@@ -46,9 +46,9 @@
 - [ ] Visual player
 
 - [x] Data import: musics
-- [ ] Data import: playlist
+- [x] Data import: playlist
 - [x] Data export: musics
-- [ ] Data export: playlist
+- [x] Data export: playlist
 
 ### Bug
 

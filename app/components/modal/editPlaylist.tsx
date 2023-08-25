@@ -28,6 +28,11 @@ export default function EditPlaylist(props: IProps) {
   const editHandler = async () => {
     try {
       await db.playlists.update(props.id, { title, tags: Array.from(tags) })
+      for (const tag of Array.from(tags)) {
+        if (await db.tags.get(tag)) continue
+        // 새로운 태그 추가
+        db.tags.add({ tagName: tag })
+      }
       props.close()
     } catch (error) {
       console.error(error)

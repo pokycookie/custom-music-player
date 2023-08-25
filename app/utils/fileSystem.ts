@@ -1,23 +1,52 @@
-import { IDBMusic, IDBPlaylist } from '@/db'
+import db, { IDBMusic, IDBPlaylist } from '@/db'
 import { IntegrityEncoding } from './integrity'
+
+export interface IFilePlaylist extends Omit<IDBPlaylist, 'musics' | 'id'> {
+  musics: IDBMusic[]
+}
 
 export interface IFileData {
   data: {
     musics: IDBMusic[]
-    playlists: IDBPlaylist[]
+    playlists: IFilePlaylist[]
   }
   meta: {
     integrityHash: string
   }
 }
 
-export function exportData(data: IFileData['data']) {
-  const meta: IFileData['meta'] = { integrityHash: IntegrityEncoding(data) }
+export interface IFileDataProps {
+  musics: IDBMusic[]
+  playlists: IDBPlaylist[]
+}
+
+export async function exportData(data: IFileDataProps) {
+  const mappedData: IFileData['data'] = {
+    musics: data.musics,
+    playlists: [],
+  }
+
+  for (const playlist of data.playlists) {
+    const musics: IDBMusic[] = []
+    for (const id of playlist.musics) {
+      const music = await db.musics.get(id)
+      if (music) musics.push(music)
+    }
+    mappedData.playlists.push({ ...playlist, musics })
+  }
 
   const fileName = `${Number(new Date())}.cmp`
-  const file = new File([JSON.stringify({ data, meta })], fileName, {
-    type: 'text/plain',
-  })
+  const meta: IFileData['meta'] = {
+    integrityHash: IntegrityEncoding(mappedData),
+  }
+
+  const file = new File(
+    [JSON.stringify({ data: mappedData, meta })],
+    fileName,
+    {
+      type: 'text/plain',
+    }
+  )
   const url = window.URL.createObjectURL(file)
   const link = document.createElement('a')
   link.href = url
