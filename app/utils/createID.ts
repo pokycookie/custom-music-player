@@ -8,7 +8,7 @@ export function createMusicID(url: string, start?: number, end?: number) {
   if (youtubeRegex.test(url)) {
     urlType = 'yt'
     type = 'youtube'
-    videoID = url.split('https://youtu.be/')[1]
+    videoID = url.split('https://youtu.be/')[1].split('?')[0]
   } else if (soundcloudRegex.test(url)) {
     urlType = 'sc'
     type = 'soundcloud'
