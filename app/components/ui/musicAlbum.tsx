@@ -1,6 +1,6 @@
 import { IDBMusic } from '@/db'
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
-import Image from 'next/image'
+import ImageWithFallback from './imageWithFallback'
 
 interface IProps {
   data: IDBMusic
@@ -20,8 +20,9 @@ export default function MusicAlbum(props: IProps) {
       onDoubleClick={doubleClickHandler}
       onMouseDown={() => startDrag(props.data)}
     >
-      <Image
+      <ImageWithFallback
         src={`https://i.ytimg.com/vi/${props.data.videoID}/original.jpg`}
+        fallback={`https://img.youtube.com/vi/${props.data.videoID}/0.jpg`}
         alt="thumbnail"
         width={800}
         height={800}

@@ -54,3 +54,4 @@
 
 - [ ] Sound bug
 - [ ] Buffer bug
+- [ ] Youtube si parameter
