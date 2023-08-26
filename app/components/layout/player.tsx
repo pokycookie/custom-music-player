@@ -12,6 +12,7 @@ import CurrentPlaylist from '../section/currentPlaylist'
 import useDisableContextMenu from '@/hooks/useDisableContextMenu'
 import { AnimatePresence } from 'framer-motion'
 import CheckController from '../ui/checkController'
+import { useCurrentPlayMusicStore } from '@/store/currentPlayMusic'
 
 export default function Player() {
   const [currentTime, setCurrentTime] = useState(0) // unit: sec
@@ -27,14 +28,20 @@ export default function Player() {
   const playerREF = useRef<ReactPlayer>(null)
   const cps = useCurrentPlaylistStore()
 
-  const currentPlayIdx = useMemo(() => {
-    if (!cps.currentPlayMusic) return null
+  const currentPlayIdx = useCurrentPlayMusicStore((state) => state.index)
+  const setCurrentPlayIdx = useCurrentPlayMusicStore((state) => state.setIndex)
+
+  useEffect(() => {
+    if (!cps.currentPlayMusic) {
+      setCurrentPlayIdx(null)
+      return
+    }
 
     const key = cps.currentPlayMusic.key
     const idx = cps.currentPlaylist.findIndex((e) => e.key === key)
 
-    return idx
-  }, [cps.currentPlayMusic, cps.currentPlaylist])
+    setCurrentPlayIdx(idx)
+  }, [cps.currentPlayMusic, cps.currentPlaylist, setCurrentPlayIdx])
 
   // Public handler
 

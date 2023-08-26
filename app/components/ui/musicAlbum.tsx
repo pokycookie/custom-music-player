@@ -9,6 +9,7 @@ import {
   faPlay,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons'
+import { useCurrentPlayMusicStore } from '@/store/currentPlayMusic'
 
 interface IProps {
   data: IDBMusic
@@ -19,10 +20,12 @@ export default function MusicAlbum(props: IProps) {
   const startDrag = useCurrentPlaylistStore((state) => state.startDrag)
   const contextOpen = useContextMenu().open
 
+  const currentPlayIdx = useCurrentPlayMusicStore((state) => state.index)
+
   const contextMenuHandler = (e: MouseEvent) => {
     contextOpen(e, [
       { title: 'Play now', icon: faPlay, onClick: playNow },
-      { title: 'Play next', icon: faForward },
+      { title: 'Play next', icon: faForward, onClick: playNext },
       { title: 'Add to playlist', icon: faPlus },
       { title: 'Edit', icon: faEdit },
     ])
@@ -33,7 +36,13 @@ export default function MusicAlbum(props: IProps) {
   }
 
   const playNow = () => playlistAdd(props.data, { restart: true, index: 0 })
-  const playNext = () => playlistAdd(props.data, { restart: false })
+  const playNext = () => {
+    if (currentPlayIdx !== null) {
+      playlistAdd(props.data, { restart: false, index: currentPlayIdx + 1 })
+    } else {
+      playNow()
+    }
+  }
 
   return (
     <div
