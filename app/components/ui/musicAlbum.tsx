@@ -6,6 +6,7 @@ import useContextMenu from '@/hooks/useContextMenu'
 import {
   faEdit,
   faForward,
+  faLayerGroup,
   faPlay,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons'
@@ -26,6 +27,7 @@ export default function MusicAlbum(props: IProps) {
     contextOpen(e, [
       { title: 'Play now', icon: faPlay, onClick: playNow },
       { title: 'Play next', icon: faForward, onClick: playNext },
+      { title: 'Add to queue', icon: faLayerGroup, onClick: playLast },
       { title: 'Add to playlist', icon: faPlus },
       { title: 'Edit', icon: faEdit },
     ])
@@ -38,7 +40,14 @@ export default function MusicAlbum(props: IProps) {
   const playNow = () => playlistAdd(props.data, { restart: true, index: 0 })
   const playNext = () => {
     if (currentPlayIdx !== null) {
-      playlistAdd(props.data, { restart: false, index: currentPlayIdx + 1 })
+      playlistAdd(props.data, { restart: false })
+    } else {
+      playNow()
+    }
+  }
+  const playLast = () => {
+    if (currentPlayIdx !== null) {
+      playlistAdd(props.data, { restart: false })
     } else {
       playNow()
     }

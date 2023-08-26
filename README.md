@@ -24,7 +24,7 @@
 - [ ] Music album: design
 - [x] Music album: add to current playlist -> double click
 - [x] Music album: add to current playlist -> drag and drop
-- [ ] Music album: custom context menu
+- [x] Music album: custom context menu
 
 - [ ] Edit music
 - [ ] Edit music: edit title, artist, videoID, time options -> first delete then create new one
