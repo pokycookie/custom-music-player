@@ -15,7 +15,7 @@ export default function PlaylistCover(props: IProps) {
             alt="thumbnail"
             width={800}
             height={800}
-            className="object-cover w-1/2 rounded grow aspect-square"
+            className="object-cover w-1/2 grow aspect-square"
             draggable={false}
             key={i}
           />

@@ -3,7 +3,6 @@
 import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import styled from '@emotion/styled'
 
 interface IPos {
   x: number
@@ -50,8 +49,3 @@ export default function MusicDND() {
     </>
   )
 }
-
-const Tooltip = styled.div<{ pos: IPos }>((props) => ({
-  left: props.pos.x,
-  top: props.pos.y,
-}))
