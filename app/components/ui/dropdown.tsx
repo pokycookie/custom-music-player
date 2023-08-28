@@ -30,12 +30,14 @@ export default function Dropdown(props: IProps) {
 
   useEffect(() => {
     const closeHandler = (e: MouseEvent) => {
-      if (props.autoClose) {
-        setIsOpen(false)
-        return
-      }
-
       if (
+        props.autoClose &&
+        isOpen &&
+        displayREF.current &&
+        !(displayREF.current as HTMLElement).contains(e.target as HTMLElement)
+      ) {
+        setIsOpen(false)
+      } else if (
         selectorREF.current &&
         !(selectorREF.current as HTMLElement).contains(e.target as HTMLElement)
       ) {
@@ -47,7 +49,7 @@ export default function Dropdown(props: IProps) {
     return () => {
       document.removeEventListener('click', closeHandler)
     }
-  }, [isOpen, props.autoClose])
+  }, [props.autoClose, isOpen])
 
   return (
     <div className="relative w-full" ref={selectorREF} onClick={openHandler}>
