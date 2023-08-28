@@ -1,3 +1,5 @@
+import { IDBMusic } from '@/db'
+
 export function createMusicID(url: string, start?: number, end?: number) {
   const youtubeRegex = /^https:\/\/youtu.be\/.*$/
   const soundcloudRegex = /^https:\/\/on\.soundcloud\.com\/.*$/
@@ -22,4 +24,13 @@ export function createMusicID(url: string, start?: number, end?: number) {
   if (end) id += `$${end}`
 
   return { id, videoID, type }
+}
+
+export function getOriginalSrc(music: IDBMusic) {
+  const prefix =
+    music.type === 'youtube'
+      ? 'https://youtu.be/'
+      : 'https://on.soundcloud.com/'
+
+  return prefix + music.videoID
 }

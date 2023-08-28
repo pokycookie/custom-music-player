@@ -1,5 +1,5 @@
 import db, { IDBMusic } from '@/db'
-import { createMusicID } from './createID'
+import { createMusicID } from './music'
 import { IFilePlaylist } from './fileSystem'
 
 export interface ICreateMusic {

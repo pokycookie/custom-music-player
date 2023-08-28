@@ -7,12 +7,14 @@ import {
   faEdit,
   faForward,
   faLayerGroup,
+  faLink,
   faPlay,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { useCurrentPlayMusicStore } from '@/store/currentPlayMusic'
 import useModal from '@/hooks/useModal'
 import ChoosePlaylist from '../modal/choosePlaylist'
+import { getOriginalSrc } from '@/utils/music'
 
 interface IProps {
   data: IDBMusic
@@ -36,6 +38,7 @@ export default function MusicAlbum(props: IProps) {
       { title: 'Play next', icon: faForward, onClick: playNext },
       { title: 'Add to queue', icon: faLayerGroup, onClick: playLast },
       { title: 'Add to playlist', icon: faPlus, onClick: playlistHandler },
+      { title: 'Open original page', icon: faLink, onClick: openOriginal },
       { title: 'Edit', icon: faEdit },
     ])
   }
@@ -59,10 +62,12 @@ export default function MusicAlbum(props: IProps) {
       playNow()
     }
   }
-
   const playlistHandler = () => {
     setContent(<ChoosePlaylist close={closeModal} musics={[props.data.id]} />)
     openModal()
+  }
+  const openOriginal = () => {
+    window.open(getOriginalSrc(props.data), '_blank')
   }
 
   return (
