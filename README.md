@@ -4,7 +4,7 @@
 
 - [ ] Flexible layout
 - [ ] Flexible layout: @media query -> main layout display none
-- [ ] Flexible layout: @media query -> sidebar layout expand <-> fold
+- [x] Flexible layout: @media query -> sidebar layout expand <-> fold
 
 - [ ] Visual player
 
@@ -55,3 +55,4 @@
 - [ ] Sound bug
 - [ ] Buffer bug
 - [x] Youtube si parameter
+- [ ] Image bug (when add music)

@@ -32,7 +32,7 @@ export default function ChoosePlaylist(props: IProps) {
   return (
     <article className="flex flex-col justify-between w-full h-full p-4 rounded-md bg-zinc-800">
       <h2 className="mb-3 ml-2 text-lg font-semibold text-gray-400">
-        Choose Playlist
+        Add To Playlist
       </h2>
       <section className="mb-6">
         <Dropdown

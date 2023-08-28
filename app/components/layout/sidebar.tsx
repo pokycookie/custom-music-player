@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHouse,
   faHeadphones,
-  faMusic,
   faGear,
   faRecordVinyl,
   faMagnifyingGlass,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -42,7 +42,7 @@ export default function Sidebar() {
   }, [pathname])
 
   return (
-    <nav className="flex flex-col justify-between w-56 h-full shrink-0 bg-zinc-800">
+    <nav className="flex flex-col justify-between h-full transition-all w-14 xl:w-56 shrink-0 bg-zinc-800">
       <ul className="relative">
         <motion.div
           className="absolute w-1 bg-purple-400 h-14"
@@ -61,19 +61,23 @@ export default function Sidebar() {
                 className="flex items-center gap-4 p-4 pl-5 h-14"
               >
                 <FontAwesomeIcon icon={e.icon} className="w-4" />
-                <p>{e.title}</p>
+                <p className="invisible overflow-hidden xl:visible whitespace-nowrap">
+                  {e.title}
+                </p>
               </Link>
             </List>
           )
         })}
       </ul>
-      <div className="w-full p-3">
+      <div className="w-full p-2 xl:p-3">
         <button
           className="flex items-center justify-center w-full gap-3 p-3 text-gray-200 rounded bg-zinc-600 hover:bg-zinc-500"
           onClick={openModal}
         >
-          <FontAwesomeIcon icon={faMusic} className="w-4" />
-          <p>Add Music</p>
+          <FontAwesomeIcon icon={faPlus} className="w-4" />
+          <p className="hidden overflow-hidden xl:block whitespace-nowrap">
+            Add Music
+          </p>
         </button>
       </div>
       {modal}
