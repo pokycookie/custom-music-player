@@ -32,6 +32,7 @@ export async function exportData(data: IFileDataProps) {
       const music = await db.musics.get(id)
       if (music) musics.push(music)
     }
+    delete playlist.id
     mappedData.playlists.push({ ...playlist, musics })
   }
 
