@@ -7,7 +7,7 @@ interface IProps {
 
 export default function PlaylistCover(props: IProps) {
   return (
-    <div className="flex flex-wrap w-full h-full overflow-hidden rounded bg-zinc-600 shrink-0">
+    <div className="flex flex-wrap w-full h-full overflow-hidden rounded select-none bg-zinc-600 shrink-0">
       {props.musics.slice(0, 4).map((music, i) => {
         return (
           <Image

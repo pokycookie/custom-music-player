@@ -18,7 +18,7 @@
 - [x] Player: reorder musics in current playlist
 - [x] Player: shuffle musics in current playlist
 - [x] Player: delete musics in current playlist
-- [ ] Player: add checked musics to playlist
+- [x] Player: add checked musics to playlist
 
 - [ ] Music album
 - [ ] Music album: design

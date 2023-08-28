@@ -11,6 +11,8 @@ import {
   faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { useCurrentPlayMusicStore } from '@/store/currentPlayMusic'
+import useModal from '@/hooks/useModal'
+import ChoosePlaylist from '../modal/choosePlaylist'
 
 interface IProps {
   data: IDBMusic
@@ -23,12 +25,17 @@ export default function MusicAlbum(props: IProps) {
 
   const currentPlayIdx = useCurrentPlayMusicStore((state) => state.index)
 
+  const { modal, openModal, closeModal, setContent } = useModal({
+    autoClose: true,
+    className: 'w-2/3 h-fit max-w-lg',
+  })
+
   const contextMenuHandler = (e: MouseEvent) => {
     contextOpen(e, [
       { title: 'Play now', icon: faPlay, onClick: playNow },
       { title: 'Play next', icon: faForward, onClick: playNext },
       { title: 'Add to queue', icon: faLayerGroup, onClick: playLast },
-      { title: 'Add to playlist', icon: faPlus },
+      { title: 'Add to playlist', icon: faPlus, onClick: playlistHandler },
       { title: 'Edit', icon: faEdit },
     ])
   }
@@ -53,6 +60,11 @@ export default function MusicAlbum(props: IProps) {
     }
   }
 
+  const playlistHandler = () => {
+    setContent(<ChoosePlaylist close={closeModal} musics={[props.data.id]} />)
+    openModal()
+  }
+
   return (
     <div
       className="w-full h-full p-2 rounded select-none bg-zinc-800"
@@ -75,6 +87,7 @@ export default function MusicAlbum(props: IProps) {
       <p className="w-full max-w-full mb-2 overflow-hidden text-xs text-gray-500 whitespace-nowrap text-ellipsis shrink">
         {props.data.artist}
       </p>
+      {modal}
     </div>
   )
 }

@@ -10,6 +10,7 @@ import LabelInput from '../ui/labelInput'
 
 interface IProps {
   close: () => void
+  autoLink?: boolean
 }
 
 export default function AddPlaylist(props: IProps) {
@@ -24,7 +25,7 @@ export default function AddPlaylist(props: IProps) {
       title: title.trim() !== '' ? title : undefined,
       tags: tags.size !== 0 ? Array.from(tags) : undefined,
     })
-    if (key) router.push(`/playlist/${key}`)
+    if (key && props.autoLink) router.push(`/playlist/${key}`)
   }
 
   return (

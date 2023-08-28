@@ -23,7 +23,7 @@ export default function PlaylistPage() {
   })
 
   useEffect(() => {
-    setContent(<AddPlaylist close={closeModal} />)
+    setContent(<AddPlaylist close={closeModal} autoLink />)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

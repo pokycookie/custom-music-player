@@ -13,6 +13,8 @@ import useDisableContextMenu from '@/hooks/useDisableContextMenu'
 import { AnimatePresence } from 'framer-motion'
 import CheckController from '../ui/checkController'
 import { useCurrentPlayMusicStore } from '@/store/currentPlayMusic'
+import useModal from '@/hooks/useModal'
+import ChoosePlaylist from '../modal/choosePlaylist'
 
 export default function Player() {
   const [currentTime, setCurrentTime] = useState(0) // unit: sec
@@ -175,6 +177,11 @@ export default function Player() {
     setRepeat(repeat)
   }
 
+  const shuffleHandler = () => {
+    if (currentPlayIdx === null) return
+    cps.shuffle(currentPlayIdx)
+  }
+
   const deleteHandler = () => {
     if (currentPlayIdx === null) return
 
@@ -189,11 +196,23 @@ export default function Player() {
     clearChecks()
   }
 
-  const playlistHandler = () => {}
+  // Add to playlist
+  const {
+    modal: playlistModal,
+    openModal,
+    closeModal,
+    setContent,
+  } = useModal({
+    autoClose: true,
+    className: 'w-2/3 h-fit max-w-lg',
+  })
 
-  const shuffleHandler = () => {
-    if (currentPlayIdx === null) return
-    cps.shuffle(currentPlayIdx)
+  const playlistHandler = () => {
+    const musics = cps.currentPlaylist
+      .filter((_, i) => checks.has(i))
+      .map((e) => e.id)
+    setContent(<ChoosePlaylist close={closeModal} musics={musics} />)
+    openModal()
   }
 
   // Use Effect
@@ -295,6 +314,7 @@ export default function Player() {
           />
         ) : null}
       </AnimatePresence>
+      {playlistModal}
     </section>
   )
 }
