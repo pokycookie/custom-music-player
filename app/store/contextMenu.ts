@@ -5,6 +5,7 @@ export interface IContextMenuData {
   title: string
   icon?: IconProp
   subTitle?: string
+  status?: 'normal' | 'danger'
   onClick?: () => void
 }
 

@@ -27,8 +27,8 @@
 - [x] Music album: custom context menu
 
 - [ ] Edit music
-- [ ] Edit music: edit title, artist, videoID, time options -> first delete then create new one
-- [ ] Edit music: edit tags
+- [ ] Edit music: edit videoID, time options -> first delete then create new one
+- [ ] Edit music: edit title, artist, tags -> update
 - [ ] Edit music: delete music parmanently
 
 - [ ] Search music

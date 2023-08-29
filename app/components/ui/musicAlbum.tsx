@@ -5,16 +5,19 @@ import { MouseEvent } from 'react'
 import useContextMenu from '@/hooks/useContextMenu'
 import {
   faEdit,
+  faEllipsisVertical,
   faForward,
   faLayerGroup,
   faLink,
   faPlay,
   faPlus,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { useCurrentPlayMusicStore } from '@/store/currentPlayMusic'
 import useModal from '@/hooks/useModal'
 import ChoosePlaylist from '../modal/choosePlaylist'
 import { getOriginalSrc } from '@/utils/music'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 interface IProps {
   data: IDBMusic
@@ -40,6 +43,7 @@ export default function MusicAlbum(props: IProps) {
       { title: 'Add to playlist', icon: faPlus, onClick: playlistHandler },
       { title: 'Open original page', icon: faLink, onClick: openOriginal },
       { title: 'Edit', icon: faEdit },
+      { title: 'Delete', icon: faTrash, status: 'danger' },
     ])
   }
 
@@ -72,7 +76,7 @@ export default function MusicAlbum(props: IProps) {
 
   return (
     <div
-      className="w-full h-full p-2 rounded select-none bg-zinc-800"
+      className="relative w-full h-full p-1 overflow-hidden rounded select-none bg-zinc-800"
       onDoubleClick={playNow}
       onMouseDown={dndHandler}
       onContextMenu={contextMenuHandler}
@@ -83,15 +87,23 @@ export default function MusicAlbum(props: IProps) {
         alt="thumbnail"
         width={800}
         height={800}
-        className="object-cover w-full mb-3 rounded aspect-square"
+        className="object-cover w-full rounded aspect-square"
         draggable={false}
       />
-      <p className="w-full max-w-full mb-1 overflow-hidden text-sm text-gray-400 whitespace-nowrap text-ellipsis shrink">
-        {props.data.title}
-      </p>
-      <p className="w-full max-w-full mb-2 overflow-hidden text-xs text-gray-500 whitespace-nowrap text-ellipsis shrink">
-        {props.data.artist}
-      </p>
+      <div className="absolute bottom-0 left-0 w-full p-2 bg-zinc-900/90">
+        <p className="w-full max-w-full mb-1 overflow-hidden text-sm text-gray-300 whitespace-nowrap text-ellipsis shrink">
+          {props.data.title}
+        </p>
+        <p className="w-full max-w-full overflow-hidden text-xs text-gray-400 whitespace-nowrap text-ellipsis shrink">
+          {props.data.artist}
+        </p>
+      </div>
+      <button
+        className="absolute flex items-center justify-center w-8 h-8 rounded top-2 right-2 bg-zinc-900/80 text-zinc-300 hover:bg-zinc-900 shrink-0"
+        onClick={contextMenuHandler}
+      >
+        <FontAwesomeIcon icon={faEllipsisVertical} className="w-5 h-5" />
+      </button>
       {modal}
     </div>
   )

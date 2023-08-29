@@ -35,7 +35,8 @@ export default function ContextMenu() {
                     if (m.onClick) m.onClick()
                     close()
                   }}
-                  className="flex items-center justify-between p-2 pl-5 pr-5 text-sm rounded cursor-pointer hover:text-zinc-300 hover:bg-zinc-800"
+                  data-status={m.status ?? 'normal'}
+                  className="flex items-center justify-between p-2 pl-5 pr-5 text-sm rounded cursor-pointer data-[status=danger]:text-red-600 data-[status=danger]:hover:bg-red-600 data-[status=danger]:hover:text-zinc-300 hover:text-zinc-300 hover:bg-zinc-800"
                 >
                   <span className="flex items-center gap-2">
                     {m.icon ? (

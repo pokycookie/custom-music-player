@@ -90,7 +90,7 @@ export default function TagInput(props: IProps) {
           opacity: focus ? 1 : 0,
         }}
         transition={{ delay: 0.1 }}
-        className="absolute w-full overflow-x-hidden overflow-y-auto border border-purple-400 rounded-sm max-h-40 bg-zinc-900 top-12"
+        className="absolute z-20 w-full overflow-x-hidden overflow-y-auto border border-purple-400 rounded-sm max-h-40 bg-zinc-900 top-12"
       >
         {tagOptions.map((tag, i) => {
           return (
