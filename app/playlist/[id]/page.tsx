@@ -3,7 +3,6 @@
 import EditPlaylist from '@/components/modal/editPlaylist'
 import Carousel from '@/components/ui/carousel'
 import Check from '@/components/ui/check'
-import MusicAlbum from '@/components/ui/musicAlbum'
 import MusicList from '@/components/ui/musicList'
 import PlaylistCover from '@/components/ui/playlistCover'
 import PlaylistMusicList from '@/components/ui/playlistMusicList'

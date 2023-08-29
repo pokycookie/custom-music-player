@@ -21,7 +21,7 @@
 - [x] Player: add checked musics to playlist
 
 - [ ] Music album
-- [ ] Music album: design
+- [x] Music album: design
 - [x] Music album: add to current playlist -> double click
 - [x] Music album: add to current playlist -> drag and drop
 - [x] Music album: custom context menu
@@ -40,7 +40,7 @@
 - [x] Playlist: create playlist
 - [x] Playlist: update playlist
 - [x] Playlist: replace current playlist
-- [ ] Playlist: context menu
+- [x] Playlist: context menu
 - [ ] Playlist: delete playlist
 
 - [ ] Visual player
