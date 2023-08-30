@@ -36,12 +36,12 @@
 - [ ] Search music: tag search -> `and`
 - [ ] Search music: text search
 
-- [ ] Playlist
+- [x] Playlist
 - [x] Playlist: create playlist
 - [x] Playlist: update playlist
 - [x] Playlist: replace current playlist
 - [x] Playlist: context menu
-- [ ] Playlist: delete playlist
+- [x] Playlist: delete playlist
 
 - [ ] Visual player
 

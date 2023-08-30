@@ -111,6 +111,14 @@ export async function createPlaylist(options?: ICreatePlaylist) {
   }
 }
 
+export async function deletePlaylist(playlistID: number) {
+  try {
+    await db.playlists.delete(playlistID)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function addPlaylistMusic(playlist: number, music: string) {
   try {
     const musics = (await db.playlists.get(playlist))?.musics ?? []

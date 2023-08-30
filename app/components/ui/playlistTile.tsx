@@ -19,6 +19,8 @@ import { useCurrentPlaylistStore } from '@/store/CurrentPlaylist'
 import { exportData } from '@/utils/fileSystem'
 import useModal from '@/hooks/useModal'
 import EditPlaylist from '../modal/editPlaylist'
+import Caution from '../modal/caution'
+import { deletePlaylist } from '@/utils/dexie'
 
 interface IProps {
   data: IDBPlaylist
@@ -36,6 +38,16 @@ export default function PlaylistTile(props: IProps) {
     className: 'w-2/3 h-fit max-w-lg',
   })
 
+  const {
+    modal: cautionModal,
+    openModal: openCautionModal,
+    closeModal: closeCautionModal,
+    setContent: setCautionContent,
+  } = useModal({
+    autoClose: true,
+    className: 'w-2/3 h-fit max-w-lg',
+  })
+
   const contextMenuHandler = (e: MouseEvent) => {
     contextOpen(e, [
       { title: 'Play', icon: faPlay, onClick: playHandler },
@@ -43,7 +55,12 @@ export default function PlaylistTile(props: IProps) {
       { title: 'Add to queue', icon: faLayerGroup, onClick: queueHandler },
       { title: 'Export', icon: faFileExport, onClick: exportHandler },
       { title: 'Edit', icon: faEdit, onClick: openModal },
-      { title: 'Delete', icon: faTrash, status: 'danger' },
+      {
+        title: 'Delete',
+        icon: faTrash,
+        status: 'danger',
+        onClick: deleteHandler,
+      },
     ])
   }
 
@@ -60,6 +77,23 @@ export default function PlaylistTile(props: IProps) {
   }
   const exportHandler = () => {
     exportData({ musics: [], playlists: [props.data] })
+  }
+  const deleteHandler = () => {
+    setCautionContent(
+      <Caution
+        close={closeCautionModal}
+        content={[
+          `Are you sure you want to permanently delete '${props.data.title}'?`,
+          "You can't restore this playlist later.",
+        ]}
+        submitText="delete"
+        onSubmit={async () => {
+          await deletePlaylist(props.data.id!)
+          closeCautionModal()
+        }}
+      />
+    )
+    openCautionModal()
   }
 
   useEffect(() => {
@@ -112,6 +146,7 @@ export default function PlaylistTile(props: IProps) {
         </button>
       </div>
       {modal}
+      {cautionModal}
     </div>
   )
 }
