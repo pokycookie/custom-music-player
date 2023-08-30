@@ -28,7 +28,7 @@
 
 - [ ] Edit music
 - [ ] Edit music: edit videoID, time options -> first delete then create new one
-- [ ] Edit music: edit title, artist, tags -> update
+- [x] Edit music: edit title, artist, tags -> update
 - [ ] Edit music: delete music parmanently
 
 - [ ] Search music
@@ -52,7 +52,9 @@
 
 ### Bug
 
-- [ ] Sound bug
+- [ ] Sound bug (0s ~ 5s)
 - [ ] Buffer bug
 - [x] Youtube si parameter
-- [ ] Image bug (when add music)
+- [ ] Image bug (when create new music)
+- [x] Toggle btn bug
+- [ ] Modal background bug (disable dnd)

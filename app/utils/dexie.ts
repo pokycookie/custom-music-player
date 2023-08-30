@@ -46,6 +46,21 @@ export async function createMusic({
   }
 }
 
+export async function updateMusic(
+  id: string,
+  data: Partial<Pick<ICreateMusic, 'title' | 'artist' | 'tags'>>
+) {
+  try {
+    if (data.title && data.title.trim() === '') throw new Error('no title')
+    if (data.artist && data.artist.trim() === '') throw new Error('no artist')
+    await db.musics.update(id, data)
+    return true
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
 export async function importMusic(data: IDBMusic[]) {
   try {
     for (const music of data) {

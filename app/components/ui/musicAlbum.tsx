@@ -20,6 +20,7 @@ import ChoosePlaylist from '../modal/choosePlaylist'
 import { getOriginalSrc } from '@/utils/music'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { exportData } from '@/utils/fileSystem'
+import EditMusic from '../modal/editMusic'
 
 interface IProps {
   data: IDBMusic
@@ -32,8 +33,23 @@ export default function MusicAlbum(props: IProps) {
 
   const currentPlayIdx = useCurrentPlayMusicStore((state) => state.index)
 
-  const { modal, openModal, closeModal, setContent } = useModal({
+  const {
+    modal: playlistModal,
+    openModal: openPlaylistModal,
+    closeModal: closePlaylistModal,
+    setContent: setPlaylistContent,
+  } = useModal({
     autoClose: true,
+    className: 'w-2/3 h-fit max-w-lg',
+  })
+
+  const {
+    modal: editModal,
+    openModal: openEditModal,
+    closeModal: closeEditModal,
+    setContent: setEditContent,
+  } = useModal({
+    autoClose: false,
     className: 'w-2/3 h-fit max-w-lg',
   })
 
@@ -45,7 +61,7 @@ export default function MusicAlbum(props: IProps) {
       { title: 'Add to playlist', icon: faPlus, onClick: playlistHandler },
       { title: 'Open original page', icon: faLink, onClick: openOriginal },
       { title: 'Export', icon: faFileExport, onClick: exportMusic },
-      { title: 'Edit', icon: faEdit },
+      { title: 'Edit', icon: faEdit, onClick: editHandler },
       { title: 'Delete', icon: faTrash, status: 'danger' },
     ])
   }
@@ -70,14 +86,28 @@ export default function MusicAlbum(props: IProps) {
     }
   }
   const playlistHandler = () => {
-    setContent(<ChoosePlaylist close={closeModal} musics={[props.data.id]} />)
-    openModal()
+    setPlaylistContent(
+      <ChoosePlaylist close={closePlaylistModal} musics={[props.data.id]} />
+    )
+    openPlaylistModal()
   }
   const openOriginal = () => {
     window.open(getOriginalSrc(props.data), '_blank')
   }
   const exportMusic = () => {
     exportData({ musics: [props.data], playlists: [] })
+  }
+  const editHandler = () => {
+    setEditContent(
+      <EditMusic
+        close={closeEditModal}
+        id={props.data.id}
+        title={props.data.title}
+        artist={props.data.artist}
+        tags={props.data.tags}
+      />
+    )
+    openEditModal()
   }
 
   return (
@@ -117,7 +147,8 @@ export default function MusicAlbum(props: IProps) {
       >
         <FontAwesomeIcon icon={faPlay} className="w-4 h-4 text-zinc-300" />
       </button>
-      {modal}
+      {playlistModal}
+      {editModal}
     </div>
   )
 }
