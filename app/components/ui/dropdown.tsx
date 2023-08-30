@@ -70,7 +70,7 @@ export default function Dropdown(props: IProps) {
         </div>
       </button>
       {isOpen ? (
-        <div className="absolute z-20 w-full mt-2 overflow-x-hidden overflow-y-auto border border-purple-400 rounded shadow-lg bg-zinc-900 h-fit">
+        <div className="absolute z-20 w-full mt-2 overflow-x-hidden overflow-y-auto border border-purple-400 rounded-sm shadow-lg max-h-36 bg-zinc-900 h-fit">
           {props.children}
         </div>
       ) : null}
