@@ -61,6 +61,21 @@ export async function updateMusic(
   }
 }
 
+export async function deleteMusic(id: string) {
+  try {
+    await db.musics.delete(id)
+    const playlists = await db.playlists
+      .filter((playlist) => playlist.musics.some((music) => id === music))
+      .toArray()
+    for (const playlist of playlists) {
+      const musics = [...playlist.musics].filter((music) => id !== music)
+      await db.playlists.update(playlist.id!, { musics })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function importMusic(data: IDBMusic[]) {
   try {
     for (const music of data) {

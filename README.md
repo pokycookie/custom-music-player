@@ -50,11 +50,13 @@
 - [x] Data export: musics
 - [x] Data export: playlist
 
+- [ ] Toast message system
+
 ### Bug
 
 - [ ] Sound bug (0s ~ 5s)
 - [ ] Buffer bug
 - [x] Youtube si parameter
-- [ ] Image bug (when create new music)
+- [ ] Image bug (when create new music or delete music)
 - [x] Toggle btn bug
 - [ ] Modal background bug (disable dnd)

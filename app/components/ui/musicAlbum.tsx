@@ -21,6 +21,8 @@ import { getOriginalSrc } from '@/utils/music'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { exportData } from '@/utils/fileSystem'
 import EditMusic from '../modal/editMusic'
+import Caution from '../modal/caution'
+import { deleteMusic } from '@/utils/dexie'
 
 interface IProps {
   data: IDBMusic
@@ -53,6 +55,16 @@ export default function MusicAlbum(props: IProps) {
     className: 'w-2/3 h-fit max-w-lg',
   })
 
+  const {
+    modal: cautionModal,
+    openModal: openCautionModal,
+    closeModal: closeCautionModal,
+    setContent: setCautionContent,
+  } = useModal({
+    autoClose: true,
+    className: 'w-2/3 h-fit max-w-lg',
+  })
+
   const contextMenuHandler = (e: MouseEvent) => {
     contextOpen(e, [
       { title: 'Play now', icon: faPlay, onClick: playNow },
@@ -62,7 +74,12 @@ export default function MusicAlbum(props: IProps) {
       { title: 'Open original page', icon: faLink, onClick: openOriginal },
       { title: 'Export', icon: faFileExport, onClick: exportMusic },
       { title: 'Edit', icon: faEdit, onClick: editHandler },
-      { title: 'Delete', icon: faTrash, status: 'danger' },
+      {
+        title: 'Delete',
+        icon: faTrash,
+        status: 'danger',
+        onClick: deleteHandler,
+      },
     ])
   }
 
@@ -109,6 +126,23 @@ export default function MusicAlbum(props: IProps) {
     )
     openEditModal()
   }
+  const deleteHandler = () => {
+    setCautionContent(
+      <Caution
+        close={closeCautionModal}
+        content={[
+          `Are you sure you want to permanently delete '${props.data.title}'?`,
+          "You can't restore this music later.",
+        ]}
+        submitText="delete"
+        onSubmit={async () => {
+          await deleteMusic(props.data.id!)
+          closeCautionModal()
+        }}
+      />
+    )
+    openCautionModal()
+  }
 
   return (
     <div
@@ -149,6 +183,7 @@ export default function MusicAlbum(props: IProps) {
       </button>
       {playlistModal}
       {editModal}
+      {cautionModal}
     </div>
   )
 }
