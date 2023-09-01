@@ -63,20 +63,24 @@ export default function ExportModal(props: IProps) {
               <p className="text-sm text-zinc-500">selected</p>
             </span>
           </div>
-          <ul className="pl-2 pr-4 mb-8 overflow-y-auto select-none max-h-56">
+          <ul className="pl-2 pr-4 mb-8 overflow-x-hidden overflow-y-auto select-none max-h-56">
             {musics?.map((music, i) => {
               return (
                 <li
                   key={i}
-                  className="flex items-center gap-3 pt-1 pb-1 text-sm text-zinc-500"
+                  className="flex items-center w-full gap-3 pt-1 pb-1 text-sm text-zinc-500"
                 >
                   <Check
                     checked={musicChecks.checks.has(i)}
                     onChange={(checked) => musicChecks.checkHandler(i, checked)}
                   />
-                  <span className="flex items-center justify-between w-full">
-                    <p className="text-zinc-400">{music.title}</p>
-                    <p className="text-xs">{music.artist}</p>
+                  <span className="flex items-center justify-between w-[calc(100%-28px)] gap-3">
+                    <p className="overflow-hidden text-zinc-400 whitespace-nowrap overflow-ellipsis">
+                      {music.title}
+                    </p>
+                    <p className="overflow-hidden text-xs whitespace-nowrap max-w-[50%] overflow-ellipsis">
+                      {music.artist}
+                    </p>
                   </span>
                 </li>
               )

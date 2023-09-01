@@ -9,7 +9,7 @@ import ContextMenu from './components/ui/contextMenu'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Custom Music Player',
+  title: 'Cookie Music Player',
   description: 'Web music player for youtube, soundcloud',
 }
 

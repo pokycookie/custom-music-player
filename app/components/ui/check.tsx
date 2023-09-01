@@ -15,12 +15,14 @@ export default function Check(props: IProps) {
   }
 
   return (
-    <CheckIcon
-      className="w-4 h-4"
-      checked={props.checked}
-      icon={props.checked ? faSquareCheck : faSquare}
-      onClick={clickHandler}
-    />
+    <button className="w-4 h-4 shrink-0">
+      <CheckIcon
+        className="w-4 h-4"
+        checked={props.checked}
+        icon={props.checked ? faSquareCheck : faSquare}
+        onClick={clickHandler}
+      />
+    </button>
   )
 }
 
