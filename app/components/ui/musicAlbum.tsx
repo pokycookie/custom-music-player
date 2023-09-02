@@ -161,11 +161,11 @@ export default function MusicAlbum(props: IProps) {
           draggable={false}
         />
       </div>
-      <div className="absolute bottom-0 left-0 w-full p-2 bg-zinc-900/90">
-        <p className="w-full max-w-full mb-1 overflow-hidden text-sm text-gray-300 whitespace-nowrap text-ellipsis shrink">
+      <div className="absolute bottom-0 left-0 w-full [padding:min(0.5vw,8px)] bg-zinc-900/90">
+        <p className="w-full max-w-full [margin-bottom:min(0.2vw,4px)] overflow-hidden [font-size:min(1vw,14px)] text-gray-300 whitespace-nowrap text-ellipsis shrink">
           {props.data.title}
         </p>
-        <p className="w-full max-w-full overflow-hidden text-xs text-gray-400 whitespace-nowrap text-ellipsis shrink">
+        <p className="w-full max-w-full overflow-hidden [font-size:min(0.5vw,12px)] text-gray-400 whitespace-nowrap text-ellipsis shrink">
           {props.data.artist}
         </p>
       </div>

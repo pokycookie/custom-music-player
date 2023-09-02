@@ -22,7 +22,7 @@ export default function RootLayout({ children }: IProps) {
     <html lang="en">
       <body className={inter.className + ' flex h-screen w-vw'}>
         <Sidebar />
-        <main className="min-w-0 overflow-auto grow shrink basis-full bg-zinc-700">
+        <main className="hidden min-w-0 overflow-auto grow shrink basis-full bg-zinc-700 md:block">
           {children}
         </main>
         <Player />

@@ -231,10 +231,10 @@ export default function Player() {
   useDisableContextMenu()
 
   return (
-    <section className="flex flex-col items-center h-full select-none w-80 bg-zinc-800 shrink-0">
+    <section className="flex flex-col items-center w-full h-full select-none md:w-80 bg-zinc-800 shrink-0">
       <section className="flex items-center justify-center w-full shrink-0">
         {cps.currentPlayMusic ? (
-          <div className="hidden">
+          <div className="md:hidden" id="playerWrapper">
             <ReactPlayer
               ref={playerREF}
               key={cps.currentPlayMusic.videoID}
@@ -264,22 +264,24 @@ export default function Player() {
             />
           </div>
         ) : null}
-        <MusicController
-          currentTime={currentTime}
-          maxTime={maxTime}
-          volume={volume}
-          mute={isMute}
-          repeat={repeat}
-          isPlaying={isPlaying}
-          onCurrentTime={currentTimeHandler}
-          onPlay={playHandler}
-          onPause={pauseHandler}
-          onPrev={prevHandler}
-          onNext={nextHandler}
-          onVolume={volumeHandler}
-          onMute={muteHandler}
-          onRepeat={repeatHandler}
-        />
+        <div className="hidden md:block">
+          <MusicController
+            currentTime={currentTime}
+            maxTime={maxTime}
+            volume={volume}
+            mute={isMute}
+            repeat={repeat}
+            isPlaying={isPlaying}
+            onCurrentTime={currentTimeHandler}
+            onPlay={playHandler}
+            onPause={pauseHandler}
+            onPrev={prevHandler}
+            onNext={nextHandler}
+            onVolume={volumeHandler}
+            onMute={muteHandler}
+            onRepeat={repeatHandler}
+          />
+        </div>
       </section>
       <div className="w-full">
         <div className="relative grid items-center h-10 gap-3 ml-3 mr-3 border-b sw-full text-zinc-400 border-zinc-400 grid-cols-playlist">

@@ -42,7 +42,7 @@ export default function Sidebar() {
   }, [pathname])
 
   return (
-    <nav className="flex flex-col justify-between h-full transition-all w-14 xl:w-56 shrink-0 bg-zinc-800">
+    <nav className="flex-col justify-between hidden h-full transition-all md:flex w-14 xl:w-56 shrink-0 bg-zinc-800">
       <ul className="relative">
         <motion.div
           className="absolute w-1 bg-purple-400 h-14"
