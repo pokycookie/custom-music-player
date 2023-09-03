@@ -90,7 +90,7 @@ export default function MusicAlbum(props: IProps) {
   const playNow = () => playlistAdd(props.data, { restart: true, index: 0 })
   const playNext = () => {
     if (currentPlayIdx !== null) {
-      playlistAdd(props.data, { restart: false })
+      playlistAdd(props.data, { restart: false, index: currentPlayIdx + 1 })
     } else {
       playNow()
     }
